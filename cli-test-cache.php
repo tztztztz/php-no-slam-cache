@@ -180,7 +180,7 @@ if (FALSE) {
 if (FALSE) {
 
 
-  $cache = new \inopx\cache\CacheMethodFile('/_inopx_cache');
+  $cache = new \inopx\cache\CacheMethodFile('_inopx_cache');
   
   echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
