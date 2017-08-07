@@ -177,10 +177,14 @@ if (FALSE) {
 
 ///////////////////
 // Test file cache
-if (FALSE) {
+if (TRUE) {
 
-
-  $cache = new \inopx\cache\CacheMethodFile('_inopx_cache');
+  $dir = __DIR__.'/inopx_cache';
+  if (!file_exists($dir)) {
+    mkdir($dir, 0775);
+  }
+  
+  $cache = new \inopx\cache\CacheMethodFile($dir);
   
   echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
