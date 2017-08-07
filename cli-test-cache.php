@@ -129,7 +129,7 @@ if (FALSE) {
 
 ///////////////////
 // Test PDO cache - PostgreSQL
-if (TRUE) {
+if (FALSE) {
   
   $dsn = 'pgsql:host=localhost;port=5432;dbname=your_db_name';
   
@@ -180,7 +180,7 @@ if (TRUE) {
 if (FALSE) {
 
 
-  $cache = new \inopx\cache\CacheMethodFile(\INOPX_NOPUB_DIR.'/_inopx_cache');
+  $cache = new \inopx\cache\CacheMethodFile('/_inopx_cache');
   
   echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
