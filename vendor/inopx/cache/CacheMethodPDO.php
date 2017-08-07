@@ -333,7 +333,7 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
   
   
   /**
-   * Tworzy tabelę SQL do przechowywania, o nazwie zawartej w $this->tableName
+   * Creates table with name of $this->tableName
    */
   public function createSQLTable($extraOptions = null) {
     
