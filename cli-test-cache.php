@@ -64,6 +64,22 @@ $createCallback = function() use($firstNames, $lastNames) {
 ////////////////////////////////////////////////////////////////////////////
 
 
+///////////////////
+// Test file cache
+if (TRUE) {
+
+  $dir = __DIR__.'/inopx_cache';
+  if (!file_exists($dir)) {
+    mkdir($dir, 0775);
+  }
+  
+  $cache = new \inopx\cache\CacheMethodFile($dir);
+  
+  echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);  
+
+}
+
+
 
 ///////////////////
 // Test memcached cache
@@ -175,18 +191,3 @@ if (FALSE) {
 }
 
 
-///////////////////
-// Test file cache
-if (TRUE) {
-
-  $dir = __DIR__.'/inopx_cache';
-  if (!file_exists($dir)) {
-    mkdir($dir, 0775);
-  }
-  
-  $cache = new \inopx\cache\CacheMethodFile($dir);
-  
-  echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
-  
-
-}
