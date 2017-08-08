@@ -121,7 +121,7 @@ Where **$PDOConnection** is a established connection to database (PDO Class), an
 
 Before you may use this cache method, you must create database table by executing method **createSQLTable**.
 
-Name of the table and names of the column can be configured by altering class variables like: **$SQLTableName**, **$SQLColumnGroupName**, **$SQLColumnKeyName** and so on - look at API Documentation for more.
+Name of the Table and names of the Columns can be configured by altering class variables like: **$SQLTableName**, **$SQLColumnGroupName**, **$SQLColumnKeyName** and so on - look at API Documentation for more.
 
 # The Deadlock Problem
 
