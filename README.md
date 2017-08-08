@@ -169,7 +169,7 @@ Callback like this is WRONG:
 
 # Testing script
 
-You can find **cli-test-cache.php** script in the mai directory of No Slam Cache package.
+You can find **cli-test-cache.php** script in the main directory of No Slam Cache package.
 
 It meant to be run in CLI mode for general purpose testing of Cache Methods and for testing the concurrency.
 
