@@ -70,8 +70,29 @@ Real example with cache method file:
 
 `echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
-# The Deadlock Problem
+# The get Method of every Cache Method Class
 
+
+# Cache method File
+
+Class \inopx\cache\CacheMethodFile is a File Storage method class with constructor:
+
+`__construct( string $baseDir = 'inopx_cache', integer $syncTimeoutSeconds = 30 )`
+
+Where **$baseDir** is a base directory for cache files, without trailing separator. The base directory must exist and be writable for PHP.
+
+For every group there will be spearated subdirectory in the base dir named after the group, but sanitised first for proper filesystem directory name.
+
+Every key if is not numeric will be converted to number by crc32 function.
+
+Based on that numer, the special subdirectory structure will be created if number exceeds 100. That is to ensure that no more than 100 files and 10 subdirectories are in every subdirectory of the group directory. 
+
+Look at \inopx\io\IOTool Class and Method **getClusteredDir**
+
+On some filesystems large number of files and/or subdirectories in one directory may leed to long disk seek times, and slow down IO. "Directory clustering" is preventing this problem from happening.
+
+
+# The Deadlock Problem
 
 When using any kind of process synchronisation, a Deadlock problem may occur.
 
