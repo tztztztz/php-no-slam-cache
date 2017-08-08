@@ -87,7 +87,7 @@ Because of that, it is important to override this value in case when the work cr
 
 Class **\inopx\cache\CacheMethodMemcached** is a Memcached Storage Method Class with constructor:
 
-`__construct( integer $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30 )`
+`__construct( $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30 )`
 
 Where constructor variables are pretty self-explanatory.
 
