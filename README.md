@@ -5,7 +5,7 @@ It's because problem lies in lack of process synchronisation not the storage met
 
 Here is example:
 
-Let's say we have very resource consuming work, that we want to cache. Let's say it involves several DB calls, and overally it takes few seconds to complete, which is very long on busy sytems.
+Let's say we want to cache very resource consuming work. Let's say it involves several DB calls, and overally it takes few seconds to complete, which is very long on busy sytems.
 
 Now, on busy system, where can be few or more HTTP requests per sec. demanding such resource, here is what happens when resource is not cached, or it's expired:
 
@@ -95,7 +95,7 @@ Class **\inopx\cache\CacheMethodMemcached** is a Memcached Storage Method Class 
 
 `__construct( $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30 )`
 
-Where constructor variables are pretty self-explanatory.
+Where constructor variables are pretty much self-explanatory.
 
 # Cache Method PDO
 
