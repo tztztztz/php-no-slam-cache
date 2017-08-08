@@ -17,7 +17,7 @@ Now, on busy system, where can be few or more HTTP requests per sec. demanding s
 
 **This is called cache slamming and it's wrong!**
 
-There should be only one process creating the resource while other should wait and sleep until process nr 1 will finish and put resource in cache, after that rest of the waiting processes should be woken up and extract resource from cache.
+There should be only one process creating the resource while other should wait and sleep until process nr 1 will finish and put resource in cache, after that rest of the waiting processes should be woken up and extract newly created resource from cache.
 
 # The Solution to Slamming and basic No Slam Cache usage
 
