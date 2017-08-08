@@ -40,11 +40,11 @@ It must be done like this:
 
 `$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
-Where $group is a cache group - think of it like name of SQL table, and $key is a cache key, think of it like unique ID of row in the table. Pair $group and $key must be unique, but $key value can be repeated in different groups.
+Where **$group** is a cache group - think of it like name of SQL table, and **$key** is a cache key, think of it like unique ID of row in the table. Pair $group and $key must be unique, but $key value can be repeated in different groups.
 
-$lifetimeInSeconds - self explanatory
+**$lifetimeInSeconds** - self explanatory
 
-$createCallback - it's no arguments callback function which will create the resource, but only, if resource is expired or not exist in the cache.
+**$createCallback** - it's no arguments callback function which will create the resource, but only, if resource is expired or not exist in the cache.
 
 It will be done with synchronisation, that is: only one process will write to the cache while others will wait and then get freshly created resource, instead of slamming the cache.
 
@@ -70,7 +70,13 @@ Real example with cache method file:
 
 `echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
-# The get Method of every Cache Method Class
+# Cache Method commons
+
+Every Cache Method implements interface **\inopx\cache\InterfaceCacheMethod** and comes with constructor containing **$syncTimeoutSeconds** variable with default value of 30.
+
+**$syncTimeoutSeconds** is a value of lock timeout, that is, if process waits longer than **$syncTimeoutSeconds** seconds, it fails to acquire lock and then, instead of throwing error, creates resource using callback and writes to the cache.
+
+Because of that, it is important to override this value in case your work may take longer time to complete.
 
 
 # Cache method File
