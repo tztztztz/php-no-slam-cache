@@ -12,37 +12,37 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
    * SQL Table name
    * @var string 
    */
-  protected $SQLTableName = 'inopx_cache';
+  public $SQLTableName = 'inopx_cache';
   
   /**
    * SQL Column name for the group column
    * @var string 
    */
-  protected $SQLColumnGroupName = 'r_group';
+  public $SQLColumnGroupName = 'r_group';
   
   /**
    * SQL Column name for the key column
    * @var string 
    */
-  protected $SQLColumnKeyName = 'r_key';
+  public $SQLColumnKeyName = 'r_key';
   
   /**
    * SQL Column name for the value column
    * @var string 
    */
-  protected $SQLColumnValueName = 'r_value';
+  public $SQLColumnValueName = 'r_value';
   
   /**
    * SQL Column name for the creation time column
    * @var string 
    */
-  protected $SQLColumnCreationTimeName = 'r_creation_time';
+  public $SQLColumnCreationTimeName = 'r_creation_time';
   
   /**
    * SQL Column name for the deadline column
    * @var string 
    */
-  protected $SQLColumnDeadlineTimeName = 'r_deadline';
+  public $SQLColumnDeadlineTimeName = 'r_deadline';
   
   /**
    * Połączenie do bazy danych
@@ -333,7 +333,7 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
   
   
   /**
-   * Creates table with name of $this->tableName
+   * Tworzy tabelę SQL do przechowywania, o nazwie zawartej w $this->tableName
    */
   public function createSQLTable($extraOptions = null) {
     
