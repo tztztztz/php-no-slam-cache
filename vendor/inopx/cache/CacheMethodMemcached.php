@@ -14,7 +14,9 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
   
   protected $memcachedPort;
 
-  public function __construct($memcachedHost = '127.0.0.1', $memcachedPort = 11211) {
+  public function __construct($memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30) {
+    
+    parent::__construct($syncTimeoutSeconds);
     
     $this->memcachedHost = $memcachedHost;
     $this->memcachedPort = $memcachedPort;
