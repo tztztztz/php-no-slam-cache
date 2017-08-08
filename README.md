@@ -91,7 +91,7 @@ Where **$baseDir** is a base directory for cache files, without trailing separat
 
 For every group there will be spearated subdirectory in the base dir named after the group, but sanitised first for proper filesystem directory name.
 
-Every key if is not numeric will be converted to number by crc32 function.
+Every key if is not numeric will be converted to number by crc32 function, **but it is recommended to use only numbers for keys**! Otherwise, there can be a conflict, as for two different string keys crc32 function can produce the same numbers.
 
 Based on that number, the special subdirectory structure will be created if number exceeds 100. That is to ensure that no more than 100 files and 10 subdirectories are in every subdirectory of the group directory. 
 
