@@ -22,7 +22,7 @@ Now, on busy system, where can be few or more HTTP requests per sec. demanding s
 # The Solution to Slamming and basic No Slam Cache usage
 
 
-No Slam Cache Package is a solution to Cache Slamming Problem, providing process synchronisation using PECL Synch package (SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php), and many readers one writer at once synchronisation model.
+No Slam Cache Package is a solution to Cache Slamming Problem, providing process synchronisation using PECL Sync package (SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php), and many readers one writer at once synchronisation model.
 
 Using No Slam Cache requires different than usual approach to creating the resource, NOT like this:
 
