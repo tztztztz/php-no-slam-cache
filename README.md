@@ -95,7 +95,7 @@ Class **\inopx\cache\CacheMethodMemcached** is a Memcached Storage Method Class 
 
 `__construct( $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30 )`
 
-Where constructor variables are pretty much self-explanatory.
+Where constructor arguments are pretty much self-explanatory.
 
 # Cache Method PDO
 
