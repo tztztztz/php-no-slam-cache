@@ -78,7 +78,7 @@ Interface **\inopx\cache\InterfaceCacheMethod** consists of **main get method** 
 
 **$syncTimeoutSeconds** is a value of lock timeout, that is, if process waits longer than **$syncTimeoutSeconds** seconds, it fails to acquire lock and then, instead of throwing error, creates resource using callback and writes to the cache.
 
-Because of that, it is important to override this value in case the work creating resource may take longer time to complete.
+Because of that, it is important to override this value in case when the work creating resource may take longer time to complete.
 
 
 # Cache Method File
