@@ -81,6 +81,28 @@ Interface **\inopx\cache\InterfaceCacheMethod** consists of **main get method** 
 Because of that, it is important to override this value in case when the work creating resource may take longer time to complete.
 
 
+
+
+# Cache Method Memcached
+
+Class **\inopx\cache\CacheMethodMemcached** is a Memcached Storage Method Class with constructor:
+
+`__construct( integer $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30 )`
+
+Where constructor variables are pretty self-explanatory.
+
+# Cache Method PDO
+
+Class **\inopx\cache\CacheMethodPDO** is a Database storage Method Class with constructor:
+
+`__construct( PDO $PDOConnection, type $sqlDialect = null, type $syncTimeoutSeconds = 30 )`
+
+Where **$PDOConnection** is a established connection to database (PDO Class), and **$sqlDialect** is one of the two dialects supported by this class: **\inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL** or **\inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL**.
+
+Before you may use this cache method, you must create database table by executing method **createSQLTable**.
+
+Name of the Table and names of the Columns can be configured by altering class variables like: **$SQLTableName**, **$SQLColumnGroupName**, **$SQLColumnKeyName** and so on - look at API Documentation for more.
+
 # Cache Method File
 
 Class **\inopx\cache\CacheMethodFile** is a File Storage Method Class with constructor:
@@ -102,26 +124,6 @@ On some filesystems large number of files and/or subdirectories in one directory
 There is still potential problem of huge number of groups and therefore, huge number of subdirectories in the base directory.
 
 **Beware of special characters in groups and keys** when using this cache method, as group and key will be respectivery subdirectory name and file name containing cached value. Those values will be sanitised first, which may lead to coflict when there are two similar keys with difference in special characters only.
-
-# Cache Method Memcached
-
-Class **\inopx\cache\CacheMethodMemcached** is a Memcached Storage Method Class with constructor:
-
-`__construct( integer $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30 )`
-
-Where constructor variables are pretty self-explanatory.
-
-# Cache Method PDO
-
-Class **\inopx\cache\CacheMethodPDO** is a Database storage Method Class with constructor:
-
-`__construct( PDO $PDOConnection, type $sqlDialect = null, type $syncTimeoutSeconds = 30 )`
-
-Where **$PDOConnection** is a established connection to database (PDO Class), and **$sqlDialect** is one of the two dialects supported by this class: **\inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL** or **\inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL**.
-
-Before you may use this cache method, you must create database table by executing method **createSQLTable**.
-
-Name of the Table and names of the Columns can be configured by altering class variables like: **$SQLTableName**, **$SQLColumnGroupName**, **$SQLColumnKeyName** and so on - look at API Documentation for more.
 
 # The Deadlock Problem
 
