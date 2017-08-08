@@ -19,14 +19,6 @@ class AdapterInterfaceSynchro implements \inopx\cache\InterfaceSynchro {
    * @var int 
    */
   protected $timeout;
-  
-  protected static $mutexMap = [];
-  
-  protected $nestedLocksProtection = true;
-  
-  const READ_LOCK = 1;
-  
-  const WRITE_LOCK = 1;
 
   /**
    * 
