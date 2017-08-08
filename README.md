@@ -9,7 +9,7 @@ Let's say we have very resource consuming work, that we want to cache. Let's say
 
 Now, on busy system, where can be few or more HTTP requests per sec. demanding such resource, here is what happens when resource is not cached, or it's expired:
 
-First process fails to extract cached resource, so it begins to create it, which will take few seconds and a lot of server power (processor/memory/io).
+1. First process fails to extract cached resource, so it begins to create it, which will take few seconds and a lot of server power (processor/memory/io).
 
 1. In the meantime, when first process is creating the resource and consuming server resources, other precesses are trying to read cache, fails, and doing the same work what process nr 1 is doing.
 
