@@ -16,13 +16,13 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   protected $useCacheSynchronisation = true;
   
   /**
-   * Synchronisation timeout in seconds. Default 30 sec.
+   * Synchronisation timeout in seconds. Default 10 sec.
    * @var int 
    */
   protected $syncTimeoutSeconds = 30;
   
   /**
-   * Interface method for setting the resource with read lock synchronisation.
+   * Interface method for setting the resource with write lock synchronisation.
    * 
    * @param type $group
    * @param type $key
@@ -157,7 +157,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
     
     $value = $this->synchronisedReadCallback($group.$key, $this->syncTimeoutSeconds, $callback);
     
-    // value found in the cache not expired?
+    // not expired value found in the cache ?
     if ($value !== NULL) {
       return $value;
     }
