@@ -158,5 +158,3 @@ Callback like this is WRONG:
 `}`
 
 ...because if it's used with cache, it will create nested lock, and if other process is locking in reversed order, there is possibility of deadlock.
-
-TO BE CONTINUED
