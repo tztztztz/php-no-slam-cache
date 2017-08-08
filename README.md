@@ -15,7 +15,7 @@ Now, on busy system, where can be few or more HTTP requests per sec. demanding s
 
 1. Performance downspike happens, everything is slowed down, and it continues to the moment when last of the processes will put the resource in the cache.
 
-1. This is called cache slamming and it's wrong!
+**This is called cache slamming and it's wrong!**
 
 There should be only one process creating the resource while other should wait and sleep until process nr 1 will finish and put resource in cache, after that rest of the waiting processes should be woken up and extract resource from cache.
 
