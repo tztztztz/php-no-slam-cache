@@ -74,6 +74,10 @@ Real example with cache method file:
 
 You need to install PECL Sync extension in order to use No Slam Cache: https://pecl.php.net/package/sync
 
+# Startup / boostrap
+
+Include **classloader.php** into your bootstrap file/procedure to load package classes.
+
 # Cache Methods commons
 
 Every Cache Method implements interface **\inopx\cache\InterfaceCacheMethod** and comes with constructor containing **$syncTimeoutSeconds** variable with default value of 30.
@@ -83,8 +87,6 @@ Interface **\inopx\cache\InterfaceCacheMethod** consists of **main get method** 
 **$syncTimeoutSeconds** is a value of lock timeout, that is, if process waits longer than **$syncTimeoutSeconds** seconds, it fails to acquire lock and then, instead of throwing error, creates resource using callback and writes to the cache.
 
 Because of that, it is important to override this value in case when the work creating resource may take longer time to complete.
-
-
 
 
 # Cache Method Memcached
