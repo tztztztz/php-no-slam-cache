@@ -166,3 +166,13 @@ Callback like this is WRONG:
 `}`
 
 ...because if it's used with cache, it will create nested lock, and if other process is locking in reversed order, there is possibility of deadlock.
+
+# Testing script
+
+You can find **cli-test-cache.php** script in the mai directory of No Slam Cache package.
+
+It meant to be run in CLI mode for general purpose testing of Cache Methods and for testing the concurrency.
+
+You may open several Command Line Windows, put command in every window 'php cli-test-cache.php', and test concurrency.
+
+The test script is initially configured for that, as it sleeps for 10 seconds in the callback function to give you time to execute script in the rest of the opened windows.
