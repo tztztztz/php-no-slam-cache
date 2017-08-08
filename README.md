@@ -74,6 +74,8 @@ Real example with cache method file:
 
 Every Cache Method implements interface **\inopx\cache\InterfaceCacheMethod** and comes with constructor containing **$syncTimeoutSeconds** variable with default value of 30.
 
+Interface **\inopx\cache\InterfaceCacheMethod** consists of **main get method** described earlier, and few others, look at API Documentation (compressed in doc-api.zip) for more details.
+
 **$syncTimeoutSeconds** is a value of lock timeout, that is, if process waits longer than **$syncTimeoutSeconds** seconds, it fails to acquire lock and then, instead of throwing error, creates resource using callback and writes to the cache.
 
 Because of that, it is important to override this value in case your work may take longer time to complete.
@@ -81,7 +83,7 @@ Because of that, it is important to override this value in case your work may ta
 
 # Cache Method File
 
-Class \inopx\cache\CacheMethodFile is a File Storage Method class with constructor:
+Class **\inopx\cache\CacheMethodFile** is a File Storage Method Class with constructor:
 
 `__construct( string $baseDir = 'inopx_cache', integer $syncTimeoutSeconds = 30 )`
 
@@ -99,10 +101,23 @@ On some filesystems large number of files and/or subdirectories in one directory
 
 # Cache Method Memcached
 
-Class \inopx\cache\CacheMethodMemcached is a Memcached Storage Method class with constructor:
+Class **\inopx\cache\CacheMethodMemcached** is a Memcached Storage Method Class with constructor:
 
+`__construct( integer $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30 )`
 
+Where constructor variables are pretty self-explanatory.
 
+# Cache Method PDO
+
+Class **\inopx\cache\CacheMethodPDO** is a Database storage Method Class with constructor:
+
+`__construct( PDO $PDOConnection, type $sqlDialect = null, type $syncTimeoutSeconds = 30 )`
+
+Where **$PDOConnection** is a established connection to database (PDO Class), and **$sqlDialect** is one of the two dialects supported by this class: **\inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL** or **\inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL**.
+
+Before you may use this cache method, you must create database table by executing method **createSQLTable**.
+
+Name of the table and names of the column can be configured by altering class variables like: **$SQLTableName**, **$SQLColumnGroupName**, **$SQLColumnKeyName** and so on - look at API Documentation for more.
 
 # The Deadlock Problem
 
