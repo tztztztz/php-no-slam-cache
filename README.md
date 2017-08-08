@@ -167,7 +167,7 @@ Callback like this is WRONG:
 
 ...because if it's used with cache, it will create nested lock, and if other process is locking in reversed order, there is possibility of deadlock.
 
-# Testing script
+# Test script
 
 You can find **cli-test-cache.php** script in the main directory of No Slam Cache package.
 
