@@ -70,7 +70,7 @@ Real example with cache method file:
 
 `echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
-# The DeadLock Problem
+# The Deadlock Problem
 
 
 When using any kind of process synchronisation, a Deadlock problem may occur.
