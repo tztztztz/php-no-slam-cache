@@ -19,7 +19,7 @@ Now, on busy system, where can be few or more HTTP requests per sec. demanding s
 
 There should be only one process creating the resource while other should wait and sleep until process nr 1 will finish and put resource in cache, after that rest of the waiting processes should be woken up and extract resource from cache.
 
-# The Solution to Slamming and basic Cache usage
+# The Solution to Slamming and basic No Slam Cache usage
 
 
 No Slam Cache Package is a solution to Cache Slamming Problem, providing process synchronisation using PECL Synch package (SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php), and many readers one writer at once synchronisation model.
