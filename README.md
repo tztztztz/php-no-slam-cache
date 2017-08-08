@@ -70,7 +70,7 @@ Real example with cache method file:
 
 `echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
-# Cache Method commons
+# Cache Methods commons
 
 Every Cache Method implements interface **\inopx\cache\InterfaceCacheMethod** and comes with constructor containing **$syncTimeoutSeconds** variable with default value of 30.
 
@@ -79,9 +79,9 @@ Every Cache Method implements interface **\inopx\cache\InterfaceCacheMethod** an
 Because of that, it is important to override this value in case your work may take longer time to complete.
 
 
-# Cache method File
+# Cache Method File
 
-Class \inopx\cache\CacheMethodFile is a File Storage method class with constructor:
+Class \inopx\cache\CacheMethodFile is a File Storage Method class with constructor:
 
 `__construct( string $baseDir = 'inopx_cache', integer $syncTimeoutSeconds = 30 )`
 
