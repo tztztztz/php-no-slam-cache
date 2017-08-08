@@ -78,7 +78,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
       return null;
     }
     
-    $saved = \inopx\io\IOTool::dataFromBase64(\file_get_contents($filename));
+    $saved = include_once $filename;
     
     // Expired?
     if ($saved[self::KEY_CREATION_TIME]+$lifetimeInSeconds < time()) {
@@ -117,7 +117,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
     
     $filename = $this->getFilename($group, $key);
     
-    \file_put_contents($filename, \inopx\io\IOTool::dataToBase64($save));
+    \file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
     
     return $value;
   }
@@ -142,7 +142,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
     
       $filename = $cache->getFilename($group, $key);
 
-      return \file_put_contents($filename, \inopx\io\IOTool::dataToBase64($save));
+      return \file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
       
     };
     
