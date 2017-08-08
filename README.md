@@ -36,7 +36,7 @@ if (!resurce in cache) {
 
 It must be done like this:
 
-`$cache = new CacheMethodObject();`
+`$cache = new CacheMethod();`
 
 `$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
