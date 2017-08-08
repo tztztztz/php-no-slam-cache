@@ -46,7 +46,7 @@ Where **$group** is a cache group - think of it like name of SQL table, and **$k
 
 **$createCallback** - it's no arguments callback function which will create the resource, but only, if resource is expired or not exist in the cache.
 
-It will be done with synchronisation, that is: **only one process will write to the cache while others will wait and then get recently created resource, instead of slamming the cache**.
+Whole process of reading/writing to the Cache is synchronised, that is: **only one process will write to the cache while others will wait and then get recently created resource, instead of slamming the cache**.
 
 Real example with cache method file:
 
