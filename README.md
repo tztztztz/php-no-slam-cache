@@ -93,11 +93,13 @@ For every group there will be spearated subdirectory in the base dir named after
 
 Every key if is not numeric will be converted to number by crc32 function.
 
-Based on that numer, the special subdirectory structure will be created if number exceeds 100. That is to ensure that no more than 100 files and 10 subdirectories are in every subdirectory of the group directory. 
+Based on that number, the special subdirectory structure will be created if number exceeds 100. That is to ensure that no more than 100 files and 10 subdirectories are in every subdirectory of the group directory. 
 
 Look at \inopx\io\IOTool Class and Method **getClusteredDir**
 
 On some filesystems large number of files and/or subdirectories in one directory may leed to long disk seek times, and slow down IO. "Directory clustering" is preventing this problem from happening.
+
+There is still potential problem of huge number of groups and therefore, huge number of subdirectories in the base directory.
 
 # Cache Method Memcached
 
