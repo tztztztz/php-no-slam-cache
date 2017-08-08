@@ -26,13 +26,13 @@ No Slam Cache Package is a solution to Cache Slamming Problem, providing process
 
 Using No Slam Cache requires different than usual approach to creating the resource, NOT like this:
 
-if (!resurce in cache) {
+`if (!resurce in cache) {`
 
-1. create resource
+`1. create resource`
 
-2. put in cache
+`2. put in cache`
 
-}
+`}`
 
 It must be done like this:
 
