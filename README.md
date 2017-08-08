@@ -70,6 +70,10 @@ Real example with cache method file:
 
 `echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
+# Requirements
+
+You need to install PECL Sync extension in order to use No Slam Cache: https://pecl.php.net/package/sync
+
 # Cache Methods commons
 
 Every Cache Method implements interface **\inopx\cache\InterfaceCacheMethod** and comes with constructor containing **$syncTimeoutSeconds** variable with default value of 30.
