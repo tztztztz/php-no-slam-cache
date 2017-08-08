@@ -97,6 +97,12 @@ Look at \inopx\io\IOTool Class and Method **getClusteredDir**
 
 On some filesystems large number of files and/or subdirectories in one directory may leed to long disk seek times, and slow down IO. "Directory clustering" is preventing this problem from happening.
 
+# Cache Method Memcached
+
+Class \inopx\cache\CacheMethodMemcached is a Memcached Storage Method class with constructor:
+
+
+
 
 # The Deadlock Problem
 
