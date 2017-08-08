@@ -78,7 +78,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
       return null;
     }
     
-    $saved = include_once $filename;
+    $saved = include $filename;
     
     // Expired?
     if ($saved[self::KEY_CREATION_TIME]+$lifetimeInSeconds < time()) {
