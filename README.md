@@ -1,5 +1,5 @@
 # PHP Cache Slamming problem
-Cache slamming is an issue people often doesn't know about, but it's making most of the caching systems pretty ineffective, regardless of caching method: files, memcached, database etc.
+Cache slamming is an issue people often doesn't know about, but it's making most of the caching systems pretty ineffective, regardless of caching storage method: files, memcached, database etc.
 
 It's because problem lies in lack of process synchronisation not the storage method.
 
