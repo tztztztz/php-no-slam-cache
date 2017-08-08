@@ -26,7 +26,7 @@ No Slam Cache Package is a solution to Cache Slamming Problem, providing process
 
 Using No Slam Cache requires different than usual approach to creating the resource, NOT like this:
 
-`if (!resurce in cache) {`
+`if (!resource in cache) {`
 
 `1. create resource`
 
