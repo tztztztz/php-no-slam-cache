@@ -113,9 +113,9 @@ Where **$baseDir** is a base directory for cache files, without trailing separat
 
 For every group there will be spearated subdirectory in the base dir named after the group, but sanitised first for proper filesystem directory name.
 
-Every key will be converted to number by **crc32** function if its not numeric.
+Every key will be converted to number by **crc32** function if its not numeric, based on that number, the special subdirectory structure will be created if number exceeds 100. 
 
-Based on that number, the special subdirectory structure will be created if number exceeds 100. That is to ensure that no more than 100 files and 10 subdirectories are in every subdirectory of the group directory. 
+That is to ensure that no more than 100 files and 10 subdirectories are in every subdirectory of the group directory. 
 
 Look at **\inopx\io\IOTool** Class and Method **getClusteredDir**
 
