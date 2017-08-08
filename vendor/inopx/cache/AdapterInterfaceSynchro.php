@@ -9,13 +9,15 @@ namespace inopx\cache;
 class AdapterInterfaceSynchro implements \inopx\cache\InterfaceSynchro {
   
   /**
-   * Synchronizator z pakietu PECL
+   * PECL Sync Class
+   * 
    * @var \SyncReaderWriter 
    */
   protected $syncReaderWriter;
   
   /**
-   * Liczba milisekund dla timeout
+   * Timeout in milliseconds
+   * 
    * @var int 
    */
   protected $timeout;
