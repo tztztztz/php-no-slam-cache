@@ -95,7 +95,7 @@ Where constructor variables are pretty self-explanatory.
 
 Class **\inopx\cache\CacheMethodPDO** is a Database storage Method Class with constructor:
 
-`__construct( PDO $PDOConnection, type $sqlDialect = null, type $syncTimeoutSeconds = 30 )`
+`__construct( PDO $PDOConnection, integer $sqlDialect = null, integer $syncTimeoutSeconds = 30 )`
 
 Where **$PDOConnection** is a established connection to database (PDO Class), and **$sqlDialect** is one of the two dialects supported by this class: **\inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL** or **\inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL**.
 
