@@ -66,7 +66,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   public function __construct($syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransforemer = null) {
     
     if (!$inputOutputTransforemer) {
-      $inputOutputTransforemer = new \inopx\cache\AdapaterInterfaceInputOutput();
+      $inputOutputTransforemer = new \inopx\cache\AdapterInterfaceInputOutput();
     }
     
     $this->syncTimeoutSeconds = $syncTimeoutSeconds;
@@ -207,9 +207,13 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   
   public function getInputOutput() {
     
+    return $this->inputOutputTransforemer;
+    
   }
 
   public function setInputOutput(InterfaceInputOutput $inputOutput) {
+    
+    $this->inputOutputTransforemer = $inputOutput;
     
   }
 
