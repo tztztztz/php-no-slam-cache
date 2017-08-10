@@ -64,22 +64,6 @@ $createCallback = function() use($firstNames, $lastNames) {
 ////////////////////////////////////////////////////////////////////////////
 
 
-///////////////////
-// Test file cache
-if (TRUE) {
-
-  $dir = __DIR__.'/inopx_cache';
-  if (!file_exists($dir)) {
-    mkdir($dir, 0775);
-  }
-  
-  $cache = new \inopx\cache\CacheMethodFile($dir);
-  
-  echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);  
-
-}
-
-
 
 ///////////////////
 // Test memcached cache
@@ -87,7 +71,7 @@ if (FALSE) {
   
   $cache = new \inopx\cache\CacheMethodMemcached('127.0.0.1', 11211);
   
-  echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
+  echo '[Memcached] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
 }
 
@@ -96,6 +80,7 @@ if (FALSE) {
 // Test PDO cache - MySQL
 if (FALSE) {
   
+  // Set proper DSN, user, and password
   $dsn = 'mysql:host=localhost;dbname=your_db_name';
   
   $username = 'bogus';
@@ -139,13 +124,13 @@ if (FALSE) {
     }
   }
   
-  echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
+  echo '[PDO MySQL] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
 }
 
 ///////////////////
 // Test PDO cache - PostgreSQL
-if (FALSE) {
+if (true) {
   
   $dsn = 'pgsql:host=localhost;port=5432;dbname=your_db_name';
   
@@ -186,8 +171,23 @@ if (FALSE) {
   }
   
   // Test 
-  echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
+  echo '[PDO PostgreSQL] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
 }
 
 
+///////////////////
+// Test file cache
+if (TRUE) {
+
+  $dir = __DIR__.'/inopx_cache';
+  if (!file_exists($dir)) {
+    mkdir($dir, 0775);
+  }
+  
+  $cache = new \inopx\cache\CacheMethodFile($dir);
+  
+  echo '[File] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
+  
+
+}
