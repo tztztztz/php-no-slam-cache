@@ -22,10 +22,11 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
    * 
    * @param string $baseDir           - base cache dir without directory separator at the end
    * @param int $syncTimeoutSeconds   - sync timeout default 30 sec
+   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransforemer - input / output transformer, leave null for default adapter
    */
-  public function __construct($baseDir = 'inopx_cache', $syncTimeoutSeconds = 30) {
+  public function __construct($baseDir = 'inopx_cache', $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransforemer = null) {
     
-    parent::__construct($syncTimeoutSeconds);
+    parent::__construct($syncTimeoutSeconds, $inputOutputTransforemer);
     
     $this->baseDir = $baseDir;
     
@@ -117,7 +118,11 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
     
     $filename = $this->getFilename($group, $key);
     
-    \file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
+    //\file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
+    
+    \file_put_contents($filename, '<?php return $this->inputOutputTransforemer->output(\''.$this->inputOutputTransforemer->input($save).'\');');
+    
+    
     
     return $value;
   }
@@ -142,7 +147,9 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
     
       $filename = $cache->getFilename($group, $key);
 
-      return \file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
+      //return \file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
+      
+      \file_put_contents($filename, '<?php return $this->inputOutputTransforemer->output(\''.$this->inputOutputTransforemer->input($save).'\');');
       
     };
     

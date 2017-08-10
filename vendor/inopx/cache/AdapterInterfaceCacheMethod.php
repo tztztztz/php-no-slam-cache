@@ -22,6 +22,14 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   protected $syncTimeoutSeconds = 30;
   
   /**
+   * Input/output transformer.
+   * 
+   * @var \inopx\cache\InterfaceInputOutput 
+   */
+  protected $inputOutputTransforemer;
+
+
+  /**
    * Interface method for setting the resource with write lock synchronisation.
    * 
    * @param type $group
@@ -53,10 +61,16 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   /**
    * Typical constructor
    * @param int $syncTimeoutSeconds - timeout of waiting for synchronisation, in seconds
+   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransforemer - input / output transformer
    */
-  public function __construct($syncTimeoutSeconds = 30) {
+  public function __construct($syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransforemer = null) {
+    
+    if (!$inputOutputTransforemer) {
+      $inputOutputTransforemer = new \inopx\cache\AdapaterInterfaceInputOutput();
+    }
     
     $this->syncTimeoutSeconds = $syncTimeoutSeconds;
+    $this->inputOutputTransforemer = $inputOutputTransforemer;
   
   }
   
@@ -191,6 +205,14 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   }
   
   
+  public function getInputOutput() {
+    
+  }
+
+  public function setInputOutput(InterfaceInputOutput $inputOutput) {
+    
+  }
+
   
   
 }

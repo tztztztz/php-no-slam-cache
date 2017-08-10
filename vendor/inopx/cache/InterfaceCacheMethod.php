@@ -47,5 +47,17 @@ interface InterfaceCacheMethod {
    */
   public function getUseCacheSynchronisation();
   
+  /**
+   * Sets input/output adapter
+   * 
+   * @param \inopx\cache\InterfaceInputOutput $inputOutput
+   */
+  public function setInputOutput(InterfaceInputOutput $inputOutput);
+  
+  /**
+   * Gets input/output adapter
+   */
+  public function getInputOutput();
+  
   
 }

@@ -13,10 +13,17 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
   protected $memcachedHost;
   
   protected $memcachedPort;
-
-  public function __construct($memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30) {
+  
+  /**
+   * 
+   * @param string $memcachedHost     - memcached host, default '127.0.0.1'
+   * @param int $memcachedPort        - memcached port, default 11211
+   * @param int $syncTimeoutSeconds   - lock timeout, default 30
+   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransforemer - input / output transformer, leave null for default adapter
+   */
+  public function __construct($memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransforemer = null) {
     
-    parent::__construct($syncTimeoutSeconds);
+    parent::__construct($syncTimeoutSeconds, $inputOutputTransforemer);
     
     $this->memcachedHost = $memcachedHost;
     $this->memcachedPort = $memcachedPort;
@@ -43,7 +50,11 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
       return NULL;
     }
 
-    $this->memcached->set($group.$key, \inopx\io\IOTool::dataToBase64($value), $lifetimeInSeconds);
+    //$this->memcached->set($group.$key, \inopx\io\IOTool::dataToBase64($value), $lifetimeInSeconds);
+    
+    $this->memcached->set($group.$key, $this->inputOutputTransforemer->input($value), $lifetimeInSeconds);
+    
+    
 
     return $value;
   }
@@ -83,7 +94,11 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
       return NULL;
     }
     
-    return \inopx\io\IOTool::dataFromBase64($value);
+    //return \inopx\io\IOTool::dataFromBase64($value);
+    
+    return $this->inputOutputTransforemer->output($value);
+    
+    
     
   }
   
@@ -102,7 +117,10 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
     
     $callback = function() use($cache, $group, $key, $value, $lifetimeInSeconds) {
       
-      return $cache->memcached->set($group.$key, \inopx\io\IOTool::dataToBase64($value), $lifetimeInSeconds);
+      //return $cache->memcached->set($group.$key, \inopx\io\IOTool::dataToBase64($value), $lifetimeInSeconds);
+      
+      return $cache->memcached->set($group.$key, $this->inputOutputTransforemer->input($value), $lifetimeInSeconds);
+      
       
     };
     
