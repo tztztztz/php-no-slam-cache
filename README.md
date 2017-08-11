@@ -13,11 +13,14 @@ On busy system there can be few or more HTTP requests per sec. requiring such re
 
 1. In the meantime, when first process is creating the resource and consuming server resources, other precesses are trying to read cache, fails, and doing the same work what process nr 1 is doing.
 
-1. Performance downspike happens, everything is slowed down, magnified by number of concurrent threads, and load the job is creating. It continues to the moment when last of the processes will put the resource in the cache, and in extreme situations can freeze the website.
+1. Performance downspike happens, everything is slowed down, magnified by number of concurrent threads, and load the job is creating. It continues to the moment when last of the processes will put the resource in the cache. In extreme situations, this can slow down your website to unacceptable levels.
 
 **This is called cache slamming and it's wrong!**
 
 > There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
+
+You may not see the problem until you have low traffic on your website, but when popularity grows, so website traffic and the problems like cache slamming.
+
 
 # The Solution to Slamming and basic No Slam Cache usage
 
