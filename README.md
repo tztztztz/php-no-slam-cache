@@ -39,7 +39,7 @@ Using No Slam Cache requires different than usual approach to creating the resou
 
 `}`
 
-It must be done in particular manner, casting checking on cache manage if resource exists and it's not expiredr. Recipe for creating resource is passed by callback.
+It must be done in particular manner, casting on cache manage checking if resource exists and it's not expiredr. Recipe for creating resource is passed by callback.
 
 `$cache = new CacheMethod();`
 
