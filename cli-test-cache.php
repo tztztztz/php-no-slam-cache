@@ -130,7 +130,7 @@ if (FALSE) {
 
 ///////////////////
 // Test PDO cache - PostgreSQL
-if (false) {
+if (FALSE) {
   
   $dsn = 'pgsql:host=localhost;port=5432;dbname=your_db_name';
   
@@ -156,7 +156,7 @@ if (false) {
   }
   
   // Test table dropping
-  if (false) {
+  if (FALSE) {
     
     if ($cache->dropSQLTable()) {
 
@@ -178,7 +178,7 @@ if (false) {
 
 ///////////////////
 // Test file cache
-if (TRUE) {
+if (FALSE) {
 
   $dir = __DIR__.'/inopx_cache';
   if (!file_exists($dir)) {
