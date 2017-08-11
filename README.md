@@ -154,9 +154,9 @@ This leads to never-ending or lock timeout error situation called Deadlock.
 
 If you need more detailed explanation, search the web, for example: https://en.wikipedia.org/wiki/Deadlock
 
-The best solution to avoid deadlocks is to never use nested locks, that is: when you acquire first lock, do not acquire any other locks until you unlock the first lock. This is smart usage of locking and guarantees no deadlocks.
+> The best solution to avoid deadlocks is to never use nested locks, that is: when you acquire first lock, do not acquire any further locks until you unlock the first lock. It is smart usage of locking and guarantees no deadlocks.
 
-Regarding No Slam Cache, it means you should never do any synchronisation inside callback function creating the resource, especially using the cache with synchronisation.
+Regarding No Slam Cache, it means you should never do any synchronisation inside callback function creating the resource, especially using the cache within.
 
 Callback like this is WRONG:
 
