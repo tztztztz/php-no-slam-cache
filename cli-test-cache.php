@@ -5,7 +5,8 @@ require __DIR__.\DIRECTORY_SEPARATOR.'classloader.php';
 //
 //                    *****     HOW TO TEST     *****
 // 
-// From code below select cache method you want to test, and replace FALSE with TRUE
+// 
+// Replace FALSE with TRUE in desired cache method section.
 // 
 // Prepare two or more command line windows, with the same directory opened where this file is located.
 // 
@@ -13,10 +14,9 @@ require __DIR__.\DIRECTORY_SEPARATOR.'classloader.php';
 // 
 // Execute code in every window and check if resource was being created only once, or many times for synchronisation off.
 // 
-// For PDO caching method You need to create DB table first by changing FALSE with TRUE and running ithis script one time.
+// For PDO caching method You need to create DB table first by changing FALSE with TRUE and then run this script one time.
 // 
 // Check the PDO method section code.
-// 
 //
 ////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +28,7 @@ require __DIR__.\DIRECTORY_SEPARATOR.'classloader.php';
 // kept in the cache under group 'products' with key '11500' and lifetime of 30 seconds
 //
 // There is a sleep applied (10 seconds) in creation process, to give you time to execute this script concurrently in another 
-// window, and see that only one resource will be created thanks to locking mechanism.
+// window, and see if only one resource will be created thanks to locking mechanism.
 
 $lifetimeInSeconds = 30;
 $group = 'products';
@@ -130,7 +130,7 @@ if (FALSE) {
 
 ///////////////////
 // Test PDO cache - PostgreSQL
-if (true) {
+if (false) {
   
   $dsn = 'pgsql:host=localhost;port=5432;dbname=your_db_name';
   
