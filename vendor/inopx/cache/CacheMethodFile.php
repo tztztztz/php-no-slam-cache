@@ -22,11 +22,11 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
    * 
    * @param string $baseDir           - base cache dir without directory separator at the end
    * @param int $syncTimeoutSeconds   - sync timeout default 30 sec
-   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransforemer - input / output transformer, leave null for default adapter
+   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransformer - input / output transformer, leave null for default adapter
    */
-  public function __construct($baseDir = 'inopx_cache', $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransforemer = null) {
+  public function __construct($baseDir = 'inopx_cache', $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null) {
     
-    parent::__construct($syncTimeoutSeconds, $inputOutputTransforemer);
+    parent::__construct($syncTimeoutSeconds, $inputOutputTransformer);
     
     $this->baseDir = $baseDir;
     
@@ -120,7 +120,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
     
     //\file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
     
-    \file_put_contents($filename, '<?php return $this->inputOutputTransforemer->output(\''.$this->inputOutputTransforemer->input($save).'\');');
+    \file_put_contents($filename, '<?php return $this->inputOutputTransformer->output(\''.$this->inputOutputTransformer->input($save).'\');');
     
     
     
@@ -149,7 +149,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
 
       //return \file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
       
-      \file_put_contents($filename, '<?php return $this->inputOutputTransforemer->output(\''.$this->inputOutputTransforemer->input($save).'\');');
+      \file_put_contents($filename, '<?php return $this->inputOutputTransformer->output(\''.$this->inputOutputTransformer->input($save).'\');');
       
     };
     

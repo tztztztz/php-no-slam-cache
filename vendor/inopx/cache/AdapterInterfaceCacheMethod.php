@@ -26,7 +26,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * 
    * @var \inopx\cache\InterfaceInputOutput 
    */
-  protected $inputOutputTransforemer;
+  protected $inputOutputTransformer;
 
 
   /**
@@ -61,16 +61,16 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   /**
    * Typical constructor
    * @param int $syncTimeoutSeconds - timeout of waiting for synchronisation, in seconds
-   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransforemer - input / output transformer
+   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransformer - input / output transformer
    */
-  public function __construct($syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransforemer = null) {
+  public function __construct($syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null) {
     
-    if (!$inputOutputTransforemer) {
-      $inputOutputTransforemer = new \inopx\cache\AdapterInterfaceInputOutput();
+    if (!$inputOutputTransformer) {
+      $inputOutputTransformer = new \inopx\cache\AdapterInterfaceInputOutput();
     }
     
     $this->syncTimeoutSeconds = $syncTimeoutSeconds;
-    $this->inputOutputTransforemer = $inputOutputTransforemer;
+    $this->inputOutputTransformer = $inputOutputTransformer;
   
   }
   
@@ -207,13 +207,13 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   
   public function getInputOutput() {
     
-    return $this->inputOutputTransforemer;
+    return $this->inputOutputTransformer;
     
   }
 
   public function setInputOutput(InterfaceInputOutput $inputOutput) {
     
-    $this->inputOutputTransforemer = $inputOutput;
+    $this->inputOutputTransformer = $inputOutput;
     
   }
 

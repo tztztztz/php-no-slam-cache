@@ -72,11 +72,11 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
    * @param \PDO $PDOConnection       - PDO Connection to the DB
    * @param type $sqlDialect          - SQL Dialect to use, leave NULL for default MySQL
    * @param type $syncTimeoutSeconds  - sync timeout default 30 sec
-   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransforemer - input / output transformer, leave null for default adapter
+   * @param \inopx\cache\InterfaceInputOutput $inputOutputTransformer - input / output transformer, leave null for default adapter
    */
-  public function __construct(\PDO $PDOConnection, $sqlDialect = null, $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransforemer = null) {
+  public function __construct(\PDO $PDOConnection, $sqlDialect = null, $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null) {
     
-    parent::__construct($syncTimeoutSeconds, $inputOutputTransforemer);
+    parent::__construct($syncTimeoutSeconds, $inputOutputTransformer);
     
     $this->PDOConnection = $PDOConnection;
     
@@ -158,7 +158,7 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
     
     //return \inopx\io\IOTool::dataFromBase64( $result[1] );
     
-    return $this->inputOutputTransforemer->output( $result[1] );
+    return $this->inputOutputTransformer->output( $result[1] );
     
     
   }
@@ -222,7 +222,7 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
     // Saving value
     //if ($preparedStmt->execute([date('Y-m-d H:i:s',$ct), date('Y-m-d H:i:s',$de), $group,$key, \inopx\io\IOTool::dataToBase64($value)]) === false) {
     
-    if ($preparedStmt->execute([date('Y-m-d H:i:s',$ct), date('Y-m-d H:i:s',$de), $group,$key, $this->inputOutputTransforemer->input($value)]) === false) {
+    if ($preparedStmt->execute([date('Y-m-d H:i:s',$ct), date('Y-m-d H:i:s',$de), $group,$key, $this->inputOutputTransformer->input($value)]) === false) {
     
     
       
@@ -284,7 +284,7 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
     $callback = function() use($cache, $preparedStmt, $group, $key, $value, $ct, $de) {
       
       //if (!$preparedStmt->execute([date('Y-m-d H:i:s',$ct), date('Y-m-d H:i:s',$de), $group, $key, \inopx\io\IOTool::dataToBase64($value)])) {
-      if (!$preparedStmt->execute([date('Y-m-d H:i:s',$ct), date('Y-m-d H:i:s',$de), $group, $key, $this->inputOutputTransforemer->input($value)])) {
+      if (!$preparedStmt->execute([date('Y-m-d H:i:s',$ct), date('Y-m-d H:i:s',$de), $group, $key, $this->inputOutputTransformer->input($value)])) {
       
       
         $e = $cache->PDOConnection->errorInfo();
