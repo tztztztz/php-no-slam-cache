@@ -3,7 +3,7 @@ Cache slamming is an issue people often doesn't know about, but it's making most
 
 It's because problem lies in lack of process synchronisation not the storage method.
 
-Here is example:
+An example of thread racing and cache slamming is shown below:
 
 Let's say we want to cache very resource consuming work. Let's say it involves several DB calls, and overally it takes few seconds to complete, which is very long on busy sytems.
 
