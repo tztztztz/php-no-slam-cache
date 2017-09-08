@@ -5,15 +5,15 @@ It's because problem lies in lack of process synchronisation not the storage met
 
 An example of thread racing and cache slamming is shown below:
 
-Let's say we want to cache very resource consuming work. Let's say it involves several DB calls, and overally it takes few seconds to complete, which is very long on busy sytems.
+Let's say we want to cache very resource consuming work, and it involves several DB calls, and other work that overally takes few seconds to complete, which is very long on busy internet sytems.
 
-On busy system there can be few or more HTTP requests per sec. requiring such resource from cache, and here is what happens when resource is not cached, or it's expired:
+On such system there can be few or more HTTP requests per second requiring such resource from cache, and here is what happens when resource is not cached, or it's expired:
 
 1. First process fails to read resource from the cache, then begins to create resource, which will take few seconds and a lot of server power: processor/memory/io.
 
 1. In the meantime, when first process is creating the resource and consuming server resources, other precesses are trying to read cache, fails, and doing the same work what process nr 1 is doing.
 
-1. Performance downspike happens, everything is slowed down, magnified by number of concurrent threads, and load the job is creating. It continues to the moment when last of the processes will put the resource in the cache. In extreme situations, this can slow down your website to unacceptable levels.
+1. Performance downspike happens, everything is slowed down, magnified by number of concurrent threads and load the Job is creating. It continues to the moment when last of the processes will put the resource in the cache. In extreme situations, this can slow down your website to unacceptable levels.
 
 **This is called cache slamming and it's wrong!**
 
@@ -25,7 +25,7 @@ You may not see the problem until you have low traffic on your website, but when
 # The Solution to Slamming and basic No Slam Cache usage
 
 
-No Slam Cache Package is a solution to Cache Slamming Problem, providing process synchronisation using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php. 
+No Slam Cache Package offers solution to Cache Slamming Problem, providing process synchronisation using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php. 
 
 It is many readers, one writer at once synchronisation model.
 
@@ -39,7 +39,7 @@ Using No Slam Cache requires different than usual approach to creating the resou
 
 `}`
 
-It must be done in particular manner, casting on cache manage checking if resource exists and it's not expiredr. Recipe for creating resource is passed by callback.
+With No Slam Cache it is done by passing closure/callback function that creates resource to the Cache Manager function that retrieves resource from cache. If resource does not exists in the cache then callback function is executed in synchronised block:
 
 `$cache = new CacheMethod();`
 
