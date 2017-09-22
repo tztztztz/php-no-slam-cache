@@ -40,7 +40,7 @@ class IOTool {
         // Conversion to number
         if (!is_numeric($fileId)) {
             
-            $fileId = crc32($fileId);
+            $fileId = abs(crc32($fileId));
             
         }
         
