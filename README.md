@@ -29,17 +29,28 @@ No Slam Cache Package offers solution to Cache Slamming Problem, providing proce
 
 It is many readers, one writer at once synchronisation model.
 
-Using No Slam Cache requires different than usual approach to creating the resource, NOT like this:
+Using No Slam Cache requires different than usual approach to creating the resource, NOT in that way:
 
-`if (!resource in cache) {`
+ `if (!resource exists in the cache) { `
 
-`1. create resource`
+ `1. create resource: several DB calls, searching, etc., few seconds to complete`
 
-`2. put in cache`
+ `2. put new resource into the cache `
+  
+ `3. return new resource`
 
-`}`
+ `} `
 
-With No Slam Cache it is done by passing closure/callback function that creates resource to the Cache Manager function that retrieves resource from cache. If resource does not exists in the cache then callback function is executed in synchronised block:
+...BUT within SINGLE call to the Cache Manager.
+
+
+With No Slam Cache it is done by passing closure/callback function that creates resource to the Cache Manager function that retrieves resource from cache. 
+
+If resource exists in the cache, closure is not executed and cached resource is returned. 
+
+If resource does not exists in the cache then callback function is executed in synchronised block, and only one callback function for given group and key is executed at once. 
+
+Example of usage:
 
 `$cache = new CacheMethod();`
 
@@ -51,13 +62,15 @@ Pair **$group** and **$key** must be unique, but **$key** value can be repeated 
 
 **$lifetimeInSeconds** - self explanatory
 
-**$createCallback** - it's no arguments callback function which will create the resource, when it is expired or not exist in the Cache.
+**$createCallback** - it's no arguments callback function which will create the resource, when it is expired or does not exist in the Cache.
 
-Whole process of reading/writing to the Cache is synchronised, that is: **only one process will write to the cache while others will wait and then get recently created resource, instead of slamming the cache**. 
+Whole process of reading/writing to the Cache is synchronised, that is: 
+
+**only one process will write to the cache while others will wait and then get recently created resource, instead of slamming the cache**. 
 
 While resource exists in the Cache and it's not expired, it can be read concurrently by many PHP processes at once.
 
-Real example with cache method file:
+Real example with callback method and cache method file:
 
 `$group = 'products';`
 
