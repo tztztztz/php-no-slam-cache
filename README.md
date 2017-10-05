@@ -11,7 +11,7 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 1. First process/thread fails to read resource from the cache, then begins to create resource, it will take few seconds and a lot of server power: processor/memory/io.
 
-1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing.
+1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing, because there is no such thing like synchronisation builded into most of the cached systems available for PHP. 
 
 1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Yur site. 
 
