@@ -5,21 +5,23 @@ It's because problem lies in lack of process synchronisation not the storage met
 
 An example of thread racing and cache slamming is shown below:
 
-Let's say we want to cache very resource consuming work, and it involves several DB calls, and other work that overally takes few seconds to complete, which is very long on busy internet sytems.
+Let's say we need to cache very resource consuming work, and it overally takes few seconds to complete, which is long time on busy internet sytems.
 
-On such system there can be few or more HTTP requests per second requiring such resource from cache, and here is what happens when resource is not cached, or it's expired:
+In a situation where there are few or more HTTP requests per second requiring such resource from cache, here is what happens when resource is not cached, or it's expired:
 
-1. First process fails to read resource from the cache, then begins to create resource, which will take few seconds and a lot of server power: processor/memory/io.
+1. First process/thread fails to read resource from the cache, then begins to create resource, it will take few seconds and a lot of server power: processor/memory/io.
 
-1. In the meantime, when first process is creating the resource and consuming server resources, other precesses are trying to read cache, fails, and doing the same work what process nr 1 is doing.
+1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing.
 
-1. Performance downspike happens, everything is slowed down, magnified by number of concurrent threads and load the Job is creating. It continues to the moment when last of the processes will put the resource in the cache. In extreme situations, this can slow down your website to unacceptable levels.
+1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Yur site. 
+
+1. It continues to the moment when last of the job is done. When that time is higher than expiration time, You are in serious troubles. 
 
 **This is called cache slamming and it's wrong!**
 
 > There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
 
-You may not see the problem until you have low traffic on your website, but when popularity grows, so website traffic and the problems like cache slamming.
+You may not see the problem until you have low traffic on your website, but when you are starting to achieve success and popularity grows, so website traffic, number of concurrent processes/threads requiring chaed resource, and that may lead to problems like cache slamming.
 
 
 # The Solution to Slamming and basic No Slam Cache usage
@@ -41,14 +43,14 @@ Using No Slam Cache requires different than usual approach to creating the resou
 
  `} `
 
-...BUT within SINGLE call to the Cache Manager.
+...BUT within SINGLE function call to the Cache Manager Object.
 
 
-With No Slam Cache it is done by passing closure/callback function that creates resource to the Cache Manager function that retrieves resource from cache. 
+With No Slam Cache it is done by passing closure/callback function that creates resource, as argument for the Cache Manager function which retrieves resource from cache. 
 
-If resource exists in the cache, closure is not executed and cached resource is returned. 
+If resource exists in the cache, closure is not executed and cached resource is returned using READ LOCK.
 
-If resource does not exists in the cache then callback function is executed in synchronised block, and only one callback function for given group and key is executed at once. 
+If resource does not exists in the cache then callback function is executed in synchronised block using WRITE BLOCK, and only one callback function for given group and key is executed at once.
 
 Example of usage:
 
