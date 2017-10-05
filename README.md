@@ -13,9 +13,9 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing, because there is no such thing like synchronisation builded into most of the cached systems available for PHP. 
 
-1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Yur site. 
+1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on The Net regarding page load time, but many indicates thet when page loads longer then 200 ms it starts to annoy The Visitor. Loading time longer than several seconds is simply unacceptable for casual Visitor on Your Website.
 
-1. It continues to the moment when last of the job is done. When that time is higher than expiration time, You are in serious troubles. 
+1. It continues to the moment when last of the job is done. When that time is higher than expiration time, than You are in serious troubles. 
 
 **This is called cache slamming and it's wrong!**
 
