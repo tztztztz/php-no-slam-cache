@@ -195,8 +195,14 @@ Callback like this is WRONG:
 
 You can find **cli-test-cache.php** script in the main directory of No Slam Cache package.
 
-It meant to be run in CLI mode for general purpose testing of Cache Methods and for testing the concurrency.
+It meant to be run in CLI mode for general purpose testing of Cache Methods and for testing concurrency.
 
-You may open several Command Line Windows, put command in every window 'php cli-test-cache.php', and test concurrency.
+Open Command Line Window / Linux Terminal and enter:
 
-The test script is initially configured for that, as it sleeps for 10 seconds in the callback function to give you time to execute script in the rest of the opened windows.
+php cli-test-cache.php
+
+Help information will appear with available commands.
+
+You should open few Command Line Windows, put desired command in every window, and test concurrency.
+
+Test script is initially configured for that, as it sleeps for 10 seconds in the callback function to give you time to execute the same script in the rest of the opened windows and observe results.
