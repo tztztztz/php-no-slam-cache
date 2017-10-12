@@ -21,13 +21,15 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 > There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
 
-You may not see the problem until you have low traffic on your website, but when you are starting to achieve success and popularity grows, so website traffic, number of concurrent processes/threads requiring chaed resource, and that may lead to problems like cache slamming.
+You may not see the problem until you have low traffic on your website, but when you are starting to achieve success and popularity grows, so website traffic, number of concurrent processes/threads requiring cached resource, and that may lead to problems like cache slamming.
 
 
 # The Solution to Slamming and basic No Slam Cache usage
 
 
 No Slam Cache Package offers solution to Cache Slamming Problem, providing process synchronisation using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php. 
+
+To install PECL Sync package visit: https://pecl.php.net/package/sync, or use package manager on your linux distribution and install php-pecl binary.
 
 It is many readers, one writer at once synchronisation model.
 
