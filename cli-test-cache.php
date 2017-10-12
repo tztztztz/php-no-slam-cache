@@ -1,24 +1,116 @@
 <?php
 require __DIR__.\DIRECTORY_SEPARATOR.'classloader.php';
 
-////////////////////////////////////////////////////////////////////////////
-//
-//                    *****     HOW TO TEST     *****
-// 
-// 
-// Replace FALSE with TRUE in desired cache method section.
-// 
-// Prepare two or more command line windows, with the same directory opened where this file is located.
-// 
-// Put execute code to every window: "php cli-test-cache.php"
-// 
-// Execute code in every window and check if resource was being created only once, or many times for synchronisation off.
-// 
-// For PDO caching method You need to create DB table first by changing FALSE with TRUE and then run this script one time.
-// 
-// Check the PDO method section code.
-//
-////////////////////////////////////////////////////////////////////////////
+ini_set('display_errors', 1);
+
+$showHelp = true;
+$command = null;
+$dsn = null;
+$user = null;
+$pass = null;
+
+$tests = [
+  'memcached' => 'Memcached method test', 
+  'file' => 'File method test', 
+  'pdo-mysql-create-table' => 'PDO Mysql Test - create cache Table', 
+  'pdo-pgsql-create-table' => 'PDO Postgresql Test - create cache Table',
+  'pdo-mysql' => 'PDO Mysql Test', 
+  'pdo-pgsql' => 'PDO Postgresql Test',
+  'pdo-mysql-drop-table' => 'PDO Mysql Test - drop cache Table', 
+  'pdo-pgsql-drop-table' => 'PDO Postgresql Test - drop cache Table'
+];
+
+
+if ($argc > 1) {
+  
+  $idx = 1;
+  
+  while (true) {
+    
+    if ($idx >= $argc) {
+      break;
+    }
+    
+    if ($argv[$idx] == '--test' || $argv[$idx] == '--dsn' || $argv[$idx] == '--user' || $argv[$idx] == '--pass') {
+      
+      $tmp = $idx;
+      $idx++;
+      
+      if ($idx >= $argc) {
+        break;
+      }
+      
+      
+      
+      if (isset($argv[ $idx ])) {
+        
+        if ($argv[$tmp] == '--test') {
+          $command = $argv[ $idx ];
+        }
+        else if ($argv[$tmp] == '--dsn') {
+          $dsn = $argv[ $idx ];
+        }
+        if ($argv[$tmp] == '--user') {
+          $user = $argv[ $idx ];
+        }
+        else if ($argv[$tmp] == '--pass') {
+          $pass = $argv[ $idx ];
+        }
+        
+      }
+      
+      
+    }
+    
+    $idx++;
+    
+  }
+  
+}
+
+echo "COMMAND = ".$command.\PHP_EOL;
+echo "USER = ".$user.\PHP_EOL;
+echo "PASS = ".$user.\PHP_EOL;
+echo "DSN = ".$user.\PHP_EOL.\PHP_EOL;
+
+
+
+if ($command) {
+  
+  $showHelp = FALSE;
+  
+  if (substr($command, 0, 4) == 'pdo-' && !$dsn) {
+    
+    echo "ERROR - DSN is required for PDO related command";
+    exit;
+  }
+  
+}
+
+if ($showHelp) {
+  
+  echo 'Usage:'.\PHP_EOL;
+  echo 'php cli-test-cache [COMMAND]'.\PHP_EOL.\PHP_EOL.'Where [COMMAND] is one or more than one of:'.\PHP_EOL.\PHP_EOL;
+  echo '--dsn Connection string to database'.\PHP_EOL.\PHP_EOL;
+  echo '--user Database user name'.\PHP_EOL.\PHP_EOL;
+  echo '--pass Database password'.\PHP_EOL.\PHP_EOL;
+  echo '--test [TEST]'.\PHP_EOL.\PHP_EOL;
+  echo 'Where [TEST] is one of following tests:'.\PHP_EOL.\PHP_EOL;
+  
+  foreach ($tests as $code => $descpn) {
+    echo $code.' - '.$descpn.\PHP_EOL;
+  }
+  
+  echo \PHP_EOL;
+  echo 'Examples:'.\PHP_EOL;
+  echo 'php cli-test-cache --test memcached'.\PHP_EOL;
+  echo 'php cli-test-cache --test files'.\PHP_EOL;
+  echo 'php cli-test-cache --test pdo-mysql-create-table --dsn "mysql:host=localhost;dbname=mydbname" --user someuser --pass somepass'.\PHP_EOL;
+  echo 'php cli-test-cache --test pdo-mysql --dsn "mysql:host=localhost;dbname=mydbname" --user someuser --pass somepass'.\PHP_EOL;
+  
+  exit;
+}
+
 
 
 
@@ -67,7 +159,7 @@ $createCallback = function() use($firstNames, $lastNames) {
 
 ///////////////////
 // Test memcached cache
-if (FALSE) {
+if ($command == 'memcached') {
   
   $cache = new \inopx\cache\CacheMethodMemcached('127.0.0.1', 11211);
   
@@ -78,24 +170,18 @@ if (FALSE) {
 
 ///////////////////
 // Test PDO cache - MySQL
-if (FALSE) {
-  
-  // Set proper DSN, user, and password
-  $dsn = 'mysql:host=localhost;dbname=your_db_name';
-  
-  $username = 'bogus';
-  $password = 'bogus';
+if ($command == 'pdo-mysql-create-table' || $command == 'pdo-mysql' || $command == 'pdo-mysql-drop-table' ) {
   
   $options = array(
       PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
   ); 
 
-  $PDO = new \PDO($dsn, $username, $password, $options);
+  $PDO = new \PDO($dsn, $user, $pass, $options);
   
   $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL);
   
   // Test table creation
-  if (FALSE) {
+  if ($command == 'pdo-mysql-create-table') {
     
     if ($cache->createSQLTable()) {
 
@@ -110,7 +196,7 @@ if (FALSE) {
   }
   
   // Test table dropping
-  if (FALSE) {
+  if ($command == 'pdo-mysql-drop-table') {
     
     if ($cache->dropSQLTable()) {
 
@@ -124,24 +210,23 @@ if (FALSE) {
     }
   }
   
-  echo '[PDO MySQL] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
+  if ($command == 'pdo-mysql') {
+  
+    echo '[PDO MySQL] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
+  
+  }
   
 }
 
 ///////////////////
 // Test PDO cache - PostgreSQL
-if (FALSE) {
+if ($command == 'pdo-pgsql-create-table' || $command == 'pdo-pgsql' || $command == 'pdo-pgsql-drop-table' ) {
   
-  $dsn = 'pgsql:host=localhost;port=5432;dbname=your_db_name';
-  
-  $username = 'bogus';
-  $password = 'bogus';
-  
-  $PDO = new \PDO($dsn, $username, $password);
+  $PDO = new \PDO($dsn, $user, $pass);
   
   $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL);
   
-  if (FALSE) {
+  if ($command == 'pdo-pgsql-create-table') {
     
     if ($cache->createSQLTable()) {
 
@@ -156,7 +241,7 @@ if (FALSE) {
   }
   
   // Test table dropping
-  if (FALSE) {
+  if ($command == 'pdo-pgsql-drop-table') {
     
     if ($cache->dropSQLTable()) {
 
@@ -170,16 +255,24 @@ if (FALSE) {
     }
   }
   
+  
+  
   // Test 
-  echo '[PDO PostgreSQL] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
+  if ($command == 'pdo-pgsql') {
+    
+    echo '[PDO PostgreSQL] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
+    
+  }
   
 }
 
 
 ///////////////////
 // Test file cache
-if (FALSE) {
-
+if ($command == 'file') {
+  
+  
+  
   $dir = __DIR__.'/inopx_cache';
   if (!file_exists($dir)) {
     mkdir($dir, 0775);
