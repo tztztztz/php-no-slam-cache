@@ -1,5 +1,5 @@
 {
-    "name": "/inopx/noslamcache",
+    "name": "inopx/noslamcache",
     "description": "PHP Cache library with process synchronisation to avoid cache slamming.",
     "authors": [
         {
