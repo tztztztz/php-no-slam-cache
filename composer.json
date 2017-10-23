@@ -1,0 +1,11 @@
+{
+    "name": "vendor/inopx",
+    "description": "PHP Cache library with process synchronisation to avoid cache slamming.",
+    "authors": [
+        {
+            "name": "Tomasz Zadora",
+            "email": "tomasz.rafal.zadora@gmail.com"
+        }
+    ],
+    "require": {}
+}
