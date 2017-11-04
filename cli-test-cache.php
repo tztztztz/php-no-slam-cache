@@ -68,10 +68,7 @@ if ($argc > 1) {
   
 }
 
-echo "COMMAND = ".$command.\PHP_EOL;
-echo "USER = ".$user.\PHP_EOL;
-echo "PASS = ".$user.\PHP_EOL;
-echo "DSN = ".$user.\PHP_EOL.\PHP_EOL;
+
 
 
 
@@ -90,7 +87,7 @@ if ($command) {
 if ($showHelp) {
   
   echo 'Usage:'.\PHP_EOL;
-  echo 'php cli-test-cache [COMMAND]'.\PHP_EOL.\PHP_EOL.'Where [COMMAND] is one or more than one of:'.\PHP_EOL.\PHP_EOL;
+  echo 'php cli-test-cache.php [COMMAND]'.\PHP_EOL.\PHP_EOL.'Where [COMMAND] is one or more than one of:'.\PHP_EOL.\PHP_EOL;
   echo '--dsn Connection string to database'.\PHP_EOL.\PHP_EOL;
   echo '--user Database user name'.\PHP_EOL.\PHP_EOL;
   echo '--pass Database password'.\PHP_EOL.\PHP_EOL;
@@ -103,14 +100,19 @@ if ($showHelp) {
   
   echo \PHP_EOL;
   echo 'Examples:'.\PHP_EOL;
-  echo 'php cli-test-cache --test memcached'.\PHP_EOL;
-  echo 'php cli-test-cache --test files'.\PHP_EOL;
-  echo 'php cli-test-cache --test pdo-mysql-create-table --dsn "mysql:host=localhost;dbname=mydbname" --user someuser --pass somepass'.\PHP_EOL;
-  echo 'php cli-test-cache --test pdo-mysql --dsn "mysql:host=localhost;dbname=mydbname" --user someuser --pass somepass'.\PHP_EOL;
+  echo 'php cli-test-cache.php --test memcached'.\PHP_EOL;
+  echo 'php cli-test-cache.php --test file'.\PHP_EOL;
+  echo 'php cli-test-cache.php --test pdo-mysql-create-table --dsn "mysql:host=localhost;dbname=mydbname" --user someuser --pass somepass'.\PHP_EOL;
+  echo 'php cli-test-cache.php --test pdo-mysql --dsn "mysql:host=localhost;dbname=mydbname" --user someuser --pass somepass'.\PHP_EOL;
   
   exit;
 }
 
+
+echo "COMMAND = ".$command.\PHP_EOL;
+echo "USER = ".$user.\PHP_EOL;
+echo "PASS = ".$user.\PHP_EOL;
+echo "DSN = ".$user.\PHP_EOL.\PHP_EOL;
 
 
 
@@ -147,14 +149,6 @@ $createCallback = function() use($firstNames, $lastNames) {
   return $resource;
 
 };
-
-
-////////////////////////////////////////////////////////////////////////////
-//
-// Change FALSE to TRUE below in desired Section to perform Test
-// 
-////////////////////////////////////////////////////////////////////////////
-
 
 
 ///////////////////
