@@ -79,7 +79,18 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
       return null;
     }
     
-    $saved = include $filename;
+    try {
+      
+      $saved = file_get_contents($filename);
+      $saved = $this->inputOutputTransformer->output($saved);
+      
+    }
+    catch (\Exception $e) {
+      
+      error_log( $e->getMessage() );
+      return null;
+      
+    }
     
     // Expired?
     if ($saved[self::KEY_CREATION_TIME]+$lifetimeInSeconds < time()) {
@@ -118,9 +129,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
     
     $filename = $this->getFilename($group, $key);
     
-    //\file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
-    
-    \file_put_contents($filename, '<?php return $this->inputOutputTransformer->output(\''.$this->inputOutputTransformer->input($save).'\');');
+    \file_put_contents( $filename, $this->inputOutputTransformer->input($save) );
     
     
     
@@ -147,9 +156,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
     
       $filename = $cache->getFilename($group, $key);
 
-      //return \file_put_contents($filename, '<?php return \inopx\io\IOTool::dataFromBase64(\''.\inopx\io\IOTool::dataToBase64($save).'\');');
-      
-      \file_put_contents($filename, '<?php return $this->inputOutputTransformer->output(\''.$this->inputOutputTransformer->input($save).'\');');
+      \file_put_contents( $filename, $this->inputOutputTransformer->input($save) );
       
     };
     
