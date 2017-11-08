@@ -1,7 +1,7 @@
 # PHP Cache Slamming problem
 Cache slamming is an issue people often doesn't know about, but it's making most of the caching systems pretty ineffective, regardless of caching storage method: files, memcached, database etc.
 
-It's because problem lies in lack of process synchronisation not the storage method.
+It's because problem lies in lack of process synchronization not the storage method.
 
 An example of thread racing and cache slamming is shown below:
 
@@ -11,7 +11,7 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 1. First process/thread fails to read resource from the cache, then begins to create resource, it will take few seconds and a lot of server power: processor/memory/io.
 
-1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing, because there is no such thing like synchronisation builded into most of the cached systems available for PHP. 
+1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing, because there is no such thing like synchronization builded into most of the cached systems available for PHP. 
 
 1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on The Net regarding page load time, but many indicates thet when page loads longer then 200 ms it starts to annoy The Visitor. Loading time longer than a dozen of seconds is simply unacceptable for casual Visitor on Your Website.
 
@@ -27,11 +27,11 @@ You may not see the problem until you have low traffic on your website, but when
 # The Solution to Slamming and basic No Slam Cache usage
 
 
-No Slam Cache Package offers solution to Cache Slamming Problem, providing process synchronisation using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php. 
+No Slam Cache Package offers solution to Cache Slamming Problem, providing process synchronization using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php. 
 
 To install PECL Sync package visit: https://pecl.php.net/package/sync, or use package manager on your linux distribution and install php-pecl binary.
 
-It is many readers, one writer at once synchronisation model.
+It is many readers, one writer at once synchronization model.
 
 Using No Slam Cache requires different than usual approach to creating the resource, NOT in that way:
 
@@ -159,7 +159,7 @@ There is still potential problem of huge number of groups and therefore, huge nu
 
 # The Deadlock Problem
 
-When using any kind of process synchronisation, a Deadlock problem may occur.
+When using any kind of process synchronization, a Deadlock problem may occur.
 
 It happens when:
 
@@ -173,7 +173,7 @@ If you need more detailed explanation, search the web, for example: https://en.w
 
 > The best solution to avoid deadlocks is to never use nested locks, that is: when you acquire first lock, do not acquire any further locks until you unlock the first lock. It is smart usage of locking and guarantees no deadlocks.
 
-Regarding No Slam Cache, it means you should never do any synchronisation inside callback function creating the resource, especially using the cache within.
+Regarding No Slam Cache, it means you should never do any synchronization inside callback function creating the resource, especially using the cache within.
 
 Callback like this is WRONG:
 
