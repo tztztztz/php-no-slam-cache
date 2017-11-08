@@ -104,6 +104,8 @@ You need to install PECL Sync extension in order to use No Slam Cache: https://p
 
 Include **classloader.php** into your bootstrap file/procedure to load package classes.
 
+Classloader is optional, as class names and position in directories is PSR-4 comptible.
+
 # Cache Methods commons
 
 Every Cache Method implements interface **\inopx\cache\InterfaceCacheMethod** and comes with constructor containing **$syncTimeoutSeconds** variable with default value of 30.
