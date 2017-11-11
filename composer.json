@@ -1,6 +1,6 @@
 {
     "name": "inopx/noslamcache",
-    "description": "PHP Cache library with process synchronisation to avoid cache slamming.",
+    "description": "PHP Cache library with process synchronization to avoid cache slamming.",
     "authors": [
         {
             "name": "Tomasz Zadora",
