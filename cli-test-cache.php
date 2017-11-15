@@ -8,6 +8,8 @@ $command = null;
 $dsn = null;
 $user = null;
 $pass = null;
+$sleep = 5;
+$lockTimeout = 30;
 
 $tests = [
   'memcached' => 'Memcached method test', 
@@ -31,7 +33,7 @@ if ($argc > 1) {
       break;
     }
     
-    if ($argv[$idx] == '--test' || $argv[$idx] == '--dsn' || $argv[$idx] == '--user' || $argv[$idx] == '--pass') {
+    if ($argv[$idx] == '--test' || $argv[$idx] == '--dsn' || $argv[$idx] == '--user' || $argv[$idx] == '--pass' || $argv[$idx] == '--sleep') {
       
       $tmp = $idx;
       $idx++;
@@ -55,6 +57,9 @@ if ($argc > 1) {
         }
         else if ($argv[$tmp] == '--pass') {
           $pass = $argv[ $idx ];
+        }
+        else if ($argv[$tmp] == '--sleep') {
+          $sleep = $argv[ $idx ];
         }
         
       }
@@ -112,7 +117,9 @@ if ($showHelp) {
 echo "COMMAND = ".$command.\PHP_EOL;
 echo "USER = ".$user.\PHP_EOL;
 echo "PASS = ".$user.\PHP_EOL;
-echo "DSN = ".$user.\PHP_EOL.\PHP_EOL;
+echo "DSN = ".$user.\PHP_EOL;
+echo "SLEEP IN CREATE PROCESS = ".$sleep." sec.".\PHP_EOL.\PHP_EOL;
+echo "LOCK TIMEOUT = ".$lockTimeout." sec.".\PHP_EOL.\PHP_EOL;
 
 
 
@@ -123,7 +130,6 @@ echo "DSN = ".$user.\PHP_EOL.\PHP_EOL;
 //
 // There is a sleep applied (10 seconds) in creation process, to give you time to execute this script concurrently in another 
 // window, and see if only one resource will be created thanks to locking mechanism.
-
 $lifetimeInSeconds = 30;
 $group = 'products';
 $key = 11500;
@@ -131,7 +137,7 @@ $key = 11500;
 $firstNames = ['Albert', 'Mark', 'Fiona', 'Helen', 'Alex', 'Robert', 'Rachel', 'Jeff'];
 $lastNames = ['Smith', 'Washington', 'Jones', 'Jackson', 'Green', 'Harris', 'Walker', 'Hall', 'Turner'];
 
-$createCallback = function() use($firstNames, $lastNames) {
+$createCallback = function() use($firstNames, $lastNames, $sleep) {
   
   // CODE COMMENTED BELOW IS AN EXAMPLE WHAT YOU SHOUD NOT DO: 
   // CREATE CACHE WITHIN CACHED RESOURCE CREATION PROCESS, BECAUSE IT MAY LEAD TO DEADLOCK
@@ -143,8 +149,8 @@ $createCallback = function() use($firstNames, $lastNames) {
   // Creating resource
   $resource = date('Y-m-d H:i:s').' '.$firstNames[rand(0, count($firstNames)-1)]. ' ' .$lastNames[rand(0, count($lastNames)-1)].' ';
   
-  // Sleep for 10 seconds
-  sleep(10);
+  // Sleep for $sleep seconds
+  sleep($sleep);
 
   return $resource;
 
@@ -155,7 +161,7 @@ $createCallback = function() use($firstNames, $lastNames) {
 // Test memcached cache
 if ($command == 'memcached') {
   
-  $cache = new \inopx\cache\CacheMethodMemcached('127.0.0.1', 11211);
+  $cache = new \inopx\cache\CacheMethodMemcached('127.0.0.1', 11211, $lockTimeout);
   
   echo '[Memcached] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
@@ -172,7 +178,7 @@ if ($command == 'pdo-mysql-create-table' || $command == 'pdo-mysql' || $command 
 
   $PDO = new \PDO($dsn, $user, $pass, $options);
   
-  $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL);
+  $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL, $lockTimeout);
   
   // Test table creation
   if ($command == 'pdo-mysql-create-table') {
@@ -218,7 +224,8 @@ if ($command == 'pdo-pgsql-create-table' || $command == 'pdo-pgsql' || $command 
   
   $PDO = new \PDO($dsn, $user, $pass);
   
-  $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL);
+  $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL, $lockTimeout);
+  
   
   if ($command == 'pdo-pgsql-create-table') {
     
@@ -272,7 +279,7 @@ if ($command == 'file') {
     mkdir($dir, 0775);
   }
   
-  $cache = new \inopx\cache\CacheMethodFile($dir);
+  $cache = new \inopx\cache\CacheMethodFile($dir, $lockTimeout);
   
   echo '[File] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
