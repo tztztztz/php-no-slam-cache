@@ -138,7 +138,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
 
   
   /**
-   * Sets cached value, with write lock synchronisation
+   * Sets cached value, with write lock synchronization
    * 
    * @param type $group
    * @param type $key
@@ -160,12 +160,12 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
       
     };
     
-    return $this->synchronisedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
+    return $this->synchronizedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
     
   }
   
   /**
-   * Destroys the cached value with write lock synchronisation
+   * Destroys the cached value with write lock synchronization
    * 
    * @param type $group
    * @param type $key
@@ -187,7 +187,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
       
     };
     
-    return $this->synchronisedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
+    return $this->synchronizedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
     
     
   }

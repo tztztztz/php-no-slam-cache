@@ -76,12 +76,12 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
       
     };
     
-    return $this->synchronisedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
+    return $this->synchronizedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
     
   }
 
   /**
-   * Get value withour synchronisation
+   * Get value withour synchronization
    * 
    * @param type $group
    * @param type $key
@@ -124,7 +124,7 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
       
     };
     
-    return $this->synchronisedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
+    return $this->synchronizedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
     
     
   }

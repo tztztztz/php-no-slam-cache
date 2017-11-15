@@ -7,7 +7,7 @@ namespace inopx\cache;
 interface InterfaceCacheMethod {
   
   /**
-   * Main method for getting and eventually creating the resource with read/write lock synchronisation.
+   * Main method for getting and eventually creating the resource with read/write lock synchronization.
    * 
    * @param string $group               - the resource group, like name of sql table
    * @param string $key                 - resource unique key, like id in the db table
@@ -17,7 +17,7 @@ interface InterfaceCacheMethod {
   public function get($group, $key, $lifetimeInSeconds, callable $createCallback = null);
   
   /**
-   * Method for setting only value in the cache with write-lock synchronisation. It can be used for example in the background cron process to push values into the cache at regular intervals.
+   * Method for setting only value in the cache with write-lock synchronization. It can be used for example in the background cron process to push values into the cache at regular intervals.
    * 
    * @param string $group               - the resource group, like name of sql table
    * @param string $key                 - resource unique key, like id in the db table
@@ -28,7 +28,7 @@ interface InterfaceCacheMethod {
   public function set($group, $key, $value, $lifetimeInSeconds);
   
   /**
-   * Destroys value in the cache with write-lock synchronisation
+   * Destroys value in the cache with write-lock synchronization
    * 
    * @param string $group
    * @param string $key
@@ -40,12 +40,12 @@ interface InterfaceCacheMethod {
    * 
    * @param boolean $decision
    */
-  public function setUseCacheSynchronisation($decision);
+  public function setUseCacheSynchronization($decision);
   
   /**
-   * Gets use synchronisation setting.
+   * Gets use synchronization setting.
    */
-  public function getUseCacheSynchronisation();
+  public function getUseCacheSynchronization();
   
   /**
    * Sets input/output adapter
@@ -58,6 +58,21 @@ interface InterfaceCacheMethod {
    * Gets input/output adapter
    */
   public function getInputOutput();
+  
+  
+  
+  /**
+   * Alias to setUseCacheSynchronization(), method will become depreciate in the future, sets whether to use locking or not.
+   * 
+   * @param boolean $decision
+   */
+  public function setUseCacheSynchronisation($decision); 
+  
+  
+  /**
+   * Alias to getUseCacheSynchronization(), method will become depreciate in the future. Gets use synchronization setting. It will become depreciate in the future. 
+   */
+  public function getUseCacheSynchronisation();
   
   
 }

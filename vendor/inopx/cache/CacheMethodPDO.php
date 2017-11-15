@@ -146,11 +146,11 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
     
     if (strtotime($result[0]) < time()) {
       
-      $decision = $this->getUseCacheSynchronisation();
+      $decision = $this->getUseCacheSynchronization();
       
-      $this->setUseCacheSynchronisation(false);
+      $this->setUseCacheSynchronization(false);
       $this->destroy($group, $key);
-      $this->setUseCacheSynchronisation($decision);
+      $this->setUseCacheSynchronization($decision);
       
       return NULL;
       
@@ -298,12 +298,12 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
       
     };
     
-    return $this->synchronisedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
+    return $this->synchronizedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
     
   }
   
   /**
-   * Destroys the cached value with write lock synchronisation
+   * Destroys the cached value with write lock synchronization
    * 
    * @param type $group
    * @param type $key
@@ -334,7 +334,7 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
       
     };
     
-    return $this->synchronisedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
+    return $this->synchronizedWriteCallback($group.$key, $this->syncTimeoutSeconds, $callback);
     
     
   }
