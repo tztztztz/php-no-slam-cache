@@ -52,7 +52,7 @@ With No Slam Cache it is done by passing closure/callback function that creates 
 
 If resource exists in the cache, closure is not executed and cached resource is returned using READ LOCK.
 
-If resource does not exists in the cache then callback function is executed in synchronised block using WRITE BLOCK, and only one callback function for given group and key is executed at once.
+If resource does not exists in the cache then callback function is executed in synchronized block using WRITE BLOCK, and only one callback function for given group and key is executed at once.
 
 Example of usage:
 
@@ -68,7 +68,7 @@ Pair **$group** and **$key** must be unique, but **$key** value can be repeated 
 
 **$createCallback** - it's no arguments callback function which will create the resource, when it is expired or does not exist in the Cache.
 
-Whole process of reading/writing to the Cache is synchronised, that is: 
+Whole process of reading/writing to the Cache is synchronized, that is: 
 
 **only one process will write to the cache while others will wait and then get recently created resource, instead of slamming the cache**. 
 
@@ -210,3 +210,4 @@ Help information will appear with available commands.
 You should open few Command Line Windows, put desired command in every window, and test concurrency.
 
 Test script is initially configured for that, as it sleeps for 10 seconds in the callback function to give you time to execute the same script in the rest of the opened windows and observe results.
+
