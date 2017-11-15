@@ -2,7 +2,7 @@
 namespace inopx\cache;
 
 /**
- * Description of AdapterInterfaceCacheMethod
+ * Basic adapter of Cache Method Interface
  *
  * @author INOVUM Tomasz Zadora
  */
@@ -161,13 +161,13 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * @param callable $createCallback  - callback for creating the resource
    * @return mixed        - if it returns NULL it means error ocurred, any other value (including boolean false or 0) is a value fetched from cache or newly created
    */
-  public function get($group, $key, $lifetimeInSeconds, callable $createCallback = null) {
+  public function get($group, $key, $lifetimeInSeconds, callable $create = null) {
     
     
     $cache = $this;
     
     $callbackRead = function() use($cache, $group, $key, $lifetimeInSeconds) { return $cache->getValueNoSynchro($group, $key, $lifetimeInSeconds); };
-    $callbackCreate = function() use($cache, $group, $key, $lifetimeInSeconds, $createCallback) { return $cache->createAndSaveValue($group, $key, $lifetimeInSeconds, $createCallback); };
+    $callbackCreate = function() use($cache, $group, $key, $lifetimeInSeconds, $create) { return $cache->createAndSaveValue($group, $key, $lifetimeInSeconds, $create); };
     
     /////////////////
     // Trying to read
@@ -188,14 +188,12 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
     
     /////////////////
     // Trying to read again - with write lock
-    $synchro = new \inopx\cache\AdapterInterfaceSynchro($group.$key, 5*1000);
+    $synchro = new \inopx\cache\AdapterInterfaceSynchro($group.$key, $this->syncTimeoutSecond);
       
     if (!$synchro->writeLock()) {
       
-      echo 'Cache lock failed at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key;
-
       \error_log('Cache lock failed at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key);
-      return $callbackCreate();
+      return $create();
     }
     
     /////////////////
