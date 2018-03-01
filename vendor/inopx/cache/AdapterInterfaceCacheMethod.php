@@ -27,6 +27,13 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * @var \inopx\cache\InterfaceInputOutput 
    */
   protected $inputOutputTransformer;
+  
+  /**
+   * Optionakl prefix added to key and group names.
+   * 
+   * @var string 
+   */
+  private $prefix;
 
 
   /**
@@ -37,7 +44,9 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * @param type $value
    * @param type $lifetimeInSeconds
    */
-  abstract public function set($group, $key, $value, $lifetimeInSeconds);
+  public function set($group, $key, $value, $lifetimeInSeconds) {
+    $key = $this->getCacheKeyPrefix().$key;
+  }
   
   /**
    * Interface method for destroying the resource using write lock synchronization.
@@ -45,18 +54,22 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * @param string $group - grupa wartości
    * @param string $key   - klucz wartości
    */
-  abstract public function destroy($group, $key);
+  public function destroy($group, $key) {
+    $key = $this->getCacheKeyPrefix().$key;
+  }
   
   /**
    * Value getter without synchronization for child class - like from file, memcached, database etc.
    */
-  abstract protected function getValueNoSynchro($group, $key, $lifetimeInSeconds);
-  
+  protected function getValueNoSynchro($group, $key, $lifetimeInSeconds) {
+    $key = $this->getCacheKeyPrefix().$key;
+  }
   /**
    * Value creator and saver to the file, db, etc. without synchronization, for child class.
    */
-  abstract protected function createAndSaveValue($group, $key, $lifetimeInSeconds, callable $createCallback);
-  
+  protected function createAndSaveValue($group, $key, $lifetimeInSeconds, callable $createCallback) {
+    $key = $this->getCacheKeyPrefix().$key;
+  }
   
   /**
    * Typical constructor
@@ -140,7 +153,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
       }
 
       if (!$result) {
-        \error_log('Cache unlock failed at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key);
+        \error_log('Cache unlock failed at '.date('Y-m-d H:i:s').' for lock key: '.$lockKey);
       }
     }
     
@@ -163,6 +176,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    */
   public function get($group, $key, $lifetimeInSeconds, callable $create = null) {
     
+    $key = $this->getCacheKeyPrefix().$key;
     
     $cache = $this;
     
@@ -286,7 +300,37 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
     return $this->getUseCacheSynchronization();
     
   }
-
+  
+  /**
+   * Sets the key name prefix. 
+   */
+  public function setCacheKeyPrefix($prefix) {
+    
+    // Maximum of 12 chars
+    if (mb_strlen($prefix) > 12) {
+      
+      return FALSE;
+      
+    }
+    
+    // Alphanumeric characters only
+    if (!preg_match('/\w+/', $prefix)) {
+      
+      return FALSE;
+      
+    }
+    
+    $this->prefix = $prefix;
+    
+    return TRUE;
+  }
+  
+  /**
+   * Gets the key and group names prefix. 
+   */
+  public function getCacheKeyPrefix() {
+    return $this->prefix;
+  }
   
   
 }

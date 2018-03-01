@@ -74,5 +74,15 @@ interface InterfaceCacheMethod {
    */
   public function getUseCacheSynchronisation();
   
+  /**
+   * Sets the key name prefix. 
+   */
+  public function setCacheKeyPrefix($prefix);
+  
+  /**
+   * Gets the key name prefix. 
+   */
+  public function getCacheKeyPrefix();
+  
   
 }

@@ -100,6 +100,8 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
    */
   protected function getValueNoSynchro($group, $key, $lifetimeInSeconds) {
     
+    parent::getValueNoSynchro($group, $key, $lifetimeInSeconds);
+    
     
     // Preparing static database statement for later use
     static $preparedStmt;
@@ -173,6 +175,8 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
    * @return type
    */
   protected function createAndSaveValue($group, $key, $lifetimeInSeconds, callable $createCallback) {
+    
+    parent::createAndSaveValue($group, $key, $lifetimeInSeconds, $createCallback);
     
     // No callable method
     if (!is_callable($createCallback)) {
@@ -248,6 +252,8 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
    */
   public function set($group, $key, $value, $lifetimeInSeconds) {
     
+    parent::set($group, $key, $value, $lifetimeInSeconds);
+    
     // Preparing static database statement for later use
     static $preparedStmt;
     
@@ -310,6 +316,8 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
    * @return boolean
    */
   public function destroy($group, $key) {
+    
+    parent::destroy($group, $key);
     
     $cache = $this;
     

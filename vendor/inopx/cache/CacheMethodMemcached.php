@@ -44,6 +44,8 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
    */
   protected function createAndSaveValue($group, $key, $lifetimeInSeconds, callable $createCallback) {
     
+    parent::createAndSaveValue($group, $key, $lifetimeInSeconds, $createCallback);
+    
     $value = $createCallback();
 
     if ($value === NULL) {
@@ -68,6 +70,8 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
    */
   public function destroy($group, $key) {
     
+    parent::destroy($group, $key);
+    
     $cache = $this;
     
     $callback = function() use($cache, $group, $key) {
@@ -89,6 +93,8 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
    * @return type
    */
   protected function getValueNoSynchro($group, $key, $lifetimeInSeconds) {
+    
+    parent::getValueNoSynchro($group, $key, $lifetimeInSeconds);
     
     if ( ($value = $this->memcached->get($group.$key)) === FALSE) {
       return NULL;
@@ -112,6 +118,8 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
    * @return boolean
    */
   public function set($group, $key, $value, $lifetimeInSeconds) {
+    
+    parent::set($group, $key, $value, $lifetimeInSeconds);
     
     $cache = $this;
     

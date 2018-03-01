@@ -2,7 +2,7 @@
 namespace inopx\cache;
 
 /**
- * Description of AdapaterInterfaceInputOutput
+ * Default adapter for input-output transformation between PHP and storage.
  *
  * @author INOVUM Tomasz Zadora
  */

@@ -2,7 +2,7 @@
 namespace inopx\cache;
 
 /**
- * Non abstract adapter of the Synchro interface, with deafult synchronisation using PECL Sync library.
+ * Non abstract adapter of the Synchro interface, with deafult synchronization using PECL Sync library.
  *
  * @author INOVUM Tomasz Zadora
  */

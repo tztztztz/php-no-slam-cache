@@ -72,6 +72,8 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
    */
   protected function getValueNoSynchro($group, $key, $lifetimeInSeconds) {
     
+    parent::getValueNoSynchro($group, $key, $lifetimeInSeconds);
+    
     $filename = $this->getFilename($group, $key);    
     
     // File not found
@@ -111,6 +113,8 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
    */
   protected function createAndSaveValue($group, $key, $lifetimeInSeconds, callable $createCallback) {
     
+    parent::createAndSaveValue($group, $key, $lifetimeInSeconds, $createCallback);
+    
     // No callable method
     if (!is_callable($createCallback)) {
       return NULL;
@@ -148,6 +152,8 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
    */
   public function set($group, $key, $value, $lifetimeInSeconds) {
     
+    parent::set($group, $key, $value, $lifetimeInSeconds);
+    
     $cache = $this;
     
     $callback = function() use($cache, $group, $key, $value) {
@@ -172,6 +178,8 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
    * @return boolean
    */
   public function destroy($group, $key) {
+    
+    parent::destroy($group, $key);
     
     $cache = $this;
     
