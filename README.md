@@ -159,6 +159,15 @@ There is still potential problem of huge number of groups and therefore, huge nu
 
 **Beware of special characters in groups and keys** when using this cache method, as group and key will be respectivery subdirectory name and file name containing cached value. Those values will be sanitised first, which may lead to coflict when there are two similar keys with difference in special characters only.
 
+
+# Dummy Cache
+
+Class **\inopx\cache\CacheMethodDummy** is for simulating cache when you don't want to use cache, but it's convenient to provide cache method object.
+
+# Key name prefix
+
+Every cache method provides way to set **key prefix** by method **setCacheKeyPrefix** and get by method **getCacheKeyPrefix**.  When you use no-slam-cache in more than one application using the same memcached server, or the same database to store cache items, providing prefix is a way to avoid key name conflicts.
+
 # The Deadlock Problem
 
 When using any kind of process synchronization, a Deadlock problem may occur.
