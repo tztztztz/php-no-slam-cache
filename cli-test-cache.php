@@ -10,6 +10,7 @@ $user = null;
 $pass = null;
 $sleep = 5;
 $lockTimeout = 30;
+$prefix = null;
 
 $tests = [
   'memcached' => 'Memcached method test', 
@@ -33,7 +34,7 @@ if ($argc > 1) {
       break;
     }
     
-    if ($argv[$idx] == '--test' || $argv[$idx] == '--dsn' || $argv[$idx] == '--user' || $argv[$idx] == '--pass' || $argv[$idx] == '--sleep') {
+    if ($argv[$idx] == '--test' || $argv[$idx] == '--dsn' || $argv[$idx] == '--user' || $argv[$idx] == '--pass' || $argv[$idx] == '--sleep' || $argv[$idx] == '--prefix') {
       
       $tmp = $idx;
       $idx++;
@@ -60,6 +61,9 @@ if ($argc > 1) {
         }
         else if ($argv[$tmp] == '--sleep') {
           $sleep = $argv[ $idx ];
+        }
+        else if ($argv[$tmp] == '--prefix') {
+          $prefix = $argv[ $idx ];
         }
         
       }
@@ -163,6 +167,9 @@ if ($command == 'memcached') {
   
   $cache = new \inopx\cache\CacheMethodMemcached('127.0.0.1', 11211, $lockTimeout);
   
+  // Setting optional prefix
+  $cache->setCacheKeyPrefix($prefix);
+  
   echo '[Memcached] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
 }
@@ -179,6 +186,9 @@ if ($command == 'pdo-mysql-create-table' || $command == 'pdo-mysql' || $command 
   $PDO = new \PDO($dsn, $user, $pass, $options);
   
   $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL, $lockTimeout);
+  
+  // Setting optional prefix
+  $cache->setCacheKeyPrefix($prefix);
   
   // Test table creation
   if ($command == 'pdo-mysql-create-table') {
@@ -225,6 +235,9 @@ if ($command == 'pdo-pgsql-create-table' || $command == 'pdo-pgsql' || $command 
   $PDO = new \PDO($dsn, $user, $pass);
   
   $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL, $lockTimeout);
+  
+  // Setting optional prefix
+  $cache->setCacheKeyPrefix($prefix);
   
   
   if ($command == 'pdo-pgsql-create-table') {
@@ -280,6 +293,9 @@ if ($command == 'file') {
   }
   
   $cache = new \inopx\cache\CacheMethodFile($dir, $lockTimeout);
+  
+  // Setting optional prefix
+  $cache->setCacheKeyPrefix($prefix);
   
   echo '[File] Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);
   
