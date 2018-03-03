@@ -45,14 +45,15 @@ Using No Slam Cache requires different than usual approach to creating the resou
 
  `} `
 
-...BUT within SINGLE function call to the Cache Manager Object.
+...but within **single** function call to the Cache Manager Object. No checking if resource exist in the cache in Your code!
 
-
-With No Slam Cache it is done by passing closure/callback function that creates resource, as argument for the Cache Manager function which retrieves resource from cache. 
+With No Slam Cache it is done by passing closure/callback function that creates resource, as argument for the Cache Method Object function which retrieves resource from cache. 
 
 If resource exists in the cache, closure is not executed and cached resource is returned using READ LOCK.
 
 If resource does not exists in the cache then callback function is executed in synchronized block using WRITE BLOCK, and only one callback function for given group and key is executed at once.
+
+Callback function is called without any arguments, and should return value designated for storage. If it returns NULL, nothing will be stored, and cache method object will return NULL as well.
 
 Example of usage:
 
@@ -60,7 +61,9 @@ Example of usage:
 
 `$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
-Where **$group** is a cache group - think of it like name of SQL table, and **$key** is a cache key, think of it like unique ID of row in the table. 
+This is just single method call, instead of checking if resource exist in the cache or not, in no slam cache it's done at Cache Method Object side, making your code more readable, verbose and compact at the same time compared to traditional cache usage described earlier in this document.
+
+**$group** argument is a cache group - think of it like name of SQL table, and **$key** is a cache key, think of it like unique ID of row in the table. 
 
 Pair **$group** and **$key** must be unique, but **$key** value can be repeated in different Groups.
 
@@ -77,9 +80,7 @@ While resource exists in the Cache and it's not expired, it can be read concurre
 Real example with callback method and cache method file:
 
 `$group = 'products';`
-
 `$key = 150;`
-
 `$lifetimeInSeconds = 30;`
 
 `$createCallback = function() use($group, $key) { return 'I was created at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key; }`
@@ -87,9 +88,7 @@ Real example with callback method and cache method file:
 `$dir = __DIR__.'/inopx_cache';`
 
 `if (!file_exists($dir)) {`
-
 `mkdir($dir, 0775);`
-
 `}`
 
 `$cache = new \inopx\cache\CacheMethodFile($dir);`
@@ -202,7 +201,7 @@ Callback like this is WRONG:
 
 `}`
 
-...because if it's used with cache, it will create nested lock, and if other process is locking in reversed order, there is possibility of deadlock.
+...because **$value2** is created using cache within the callback, it's nested lock, and if other process is locking in reversed order, using the same group and key, there is possibility of deadlock.
 
 # Test script
 
