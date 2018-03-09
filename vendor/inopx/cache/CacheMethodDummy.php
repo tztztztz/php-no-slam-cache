@@ -47,11 +47,11 @@ class CacheMethodDummy implements \inopx\cache\InterfaceCacheMethod {
 
   
   public function getCacheKeyPrefix() {
-    
+    return FALSE;
   }
 
   public function setCacheKeyPrefix($prefix) {
-    
+    return FALSE;
   }
 
   
