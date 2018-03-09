@@ -2,7 +2,7 @@
 namespace inopx\cache;
 
 /**
- * Description of CacheMethodDummy
+ * Dummy Cache method for simulating cache.
  *
  * @author INOVUM Tomasz Zadora
  */
@@ -45,5 +45,14 @@ class CacheMethodDummy implements \inopx\cache\InterfaceCacheMethod {
     return TRUE;
   }
 
+  
+  public function getCacheKeyPrefix() {
+    
+  }
 
+  public function setCacheKeyPrefix($prefix) {
+    
+  }
+
+  
 }
