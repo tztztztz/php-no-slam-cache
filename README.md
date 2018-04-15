@@ -13,15 +13,15 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing, because there is no such thing like synchronization builded into most of the cached systems available for PHP. 
 
-1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on The Net regarding page load time, but many indicates thet when page loads longer then 200 ms it starts to annoy The Visitor. Loading time longer than a dozen of seconds is simply unacceptable for casual Visitor on Your Website.
+1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, but many indicates that when page loads longer then 200 ms it starts to annoy the Visitor. Loading time longer than a dozen of seconds is simply unacceptable for casual Visitor on Your Website.
 
-1. It continues to the moment when last of the job is done. When that time is higher than expiration time, then You are in serious troubles. 
+1. It continues to the moment when last of the job is done. When that time is higher than cached item expiration time, then You are in serious trouble. 
 
 **This is called cache slamming and it's wrong!**
 
 > There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
 
-You may not see the problem until you have low traffic on your website, but when you are starting to achieve success and popularity grows, so website traffic, number of concurrent processes/threads requiring cached resource, and that may lead to problems like cache slamming.
+You may not see the problem until you have low traffic on Your website, but when You're starting to achieve success and popularity grows, so website traffic and number of concurrent processes/threads requiring cached resource, it may lead to problems like cache slamming and performance down spikes.
 
 
 # The Solution to Slamming and basic No Slam Cache usage
@@ -29,7 +29,7 @@ You may not see the problem until you have low traffic on your website, but when
 
 No Slam Cache Package offers solution to Cache Slamming Problem, providing process synchronization using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php. 
 
-To install PECL Sync package visit: https://pecl.php.net/package/sync, or use package manager on your linux distribution and install php-pecl binary.
+To install PECL Sync package visit: https://pecl.php.net/package/sync, or use package manager on your linux distribution and install php-pecl binary. It also working on Microsoft Windows.
 
 It is many readers, one writer at once synchronization model.
 
