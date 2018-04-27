@@ -35,6 +35,12 @@ class AdapterInterfaceSynchro implements \inopx\cache\InterfaceSynchro {
   private $debug;
   
   /**
+   * Set to true, of there is no SYNC library present
+   * @var boolean 
+   */
+  private $noSynchro;
+  
+  /**
    * 
    * @param string $key   - synchro key
    * @param int $timeout  - timeout in milliseconds (1/1000 sec).
@@ -47,11 +53,22 @@ class AdapterInterfaceSynchro implements \inopx\cache\InterfaceSynchro {
       $this->key = $key;
     }
     
-    $this->syncReaderWriter = new \SyncReaderWriter($key);
+    if (!class_exists('syncReaderWriter')) {
+      $this->noSynchro = true;
+      error_log('WARNING - Sync library is not present', E_WARNING);
+    }
+    else {
+      $this->syncReaderWriter = new \SyncReaderWriter($key);
+    }
+    
     $this->timeout = $timeout;
   }
   
   public function readLock() {
+    
+    if ($this->noSynchro) {
+      return true;
+    }
     
     if ($this->debug) {
       error_log('readLock() timeout '.$this->timeout.' for '.$this->key);
@@ -62,6 +79,10 @@ class AdapterInterfaceSynchro implements \inopx\cache\InterfaceSynchro {
 
   public function readUnlock() {
     
+    if ($this->noSynchro) {
+      return true;
+    }
+    
     if ($this->debug) {
       error_log('readUnlock() for '.$this->key);
     }
@@ -71,6 +92,10 @@ class AdapterInterfaceSynchro implements \inopx\cache\InterfaceSynchro {
 
   public function writeLock() {
     
+    if ($this->noSynchro) {
+      return true;
+    }
+    
     if ($this->debug) {
       error_log('writeLock() timeout '.$this->timeout.' for '.$this->key);
     }
@@ -79,6 +104,10 @@ class AdapterInterfaceSynchro implements \inopx\cache\InterfaceSynchro {
   }
 
   public function writeUnlock() {
+    
+    if ($this->noSynchro) {
+      return true;
+    }
     
     if ($this->debug) {
       error_log('writeUnlock() for '.$this->key);
