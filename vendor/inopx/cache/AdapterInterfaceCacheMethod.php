@@ -19,7 +19,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * Synchronisation timeout in seconds. Default 30 sec.
    * @var int 
    */
-  protected $syncTimeoutSeconds = 1;
+  protected $syncTimeoutSeconds = 30;
   
   /**
    * Input/output transformer.
