@@ -103,7 +103,7 @@ You need to install PECL Sync extension in order to use No Slam Cache: https://p
 
 Include **classloader.php** into your bootstrap file/procedure to load package classes.
 
-Classloader is optional, as class names and position in directories are PSR-4 comptible.
+Classloader is optional, as class names and position in directories are PSR-4 compatible.
 
 # Cache Methods commons
 
