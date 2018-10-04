@@ -105,6 +105,10 @@ Include **classloader.php** into your bootstrap file/procedure to load package c
 
 Classloader is optional, as class names and position in directories are PSR-4 compatible.
 
+You can also use composer to install: https://packagist.org/packages/inopx/noslamcache
+
+$ composer require inopx/noslamcache
+
 # Cache Methods commons
 
 Every Cache Method implements interface **\inopx\cache\InterfaceCacheMethod** and comes with constructor containing **$syncTimeoutSeconds** variable with default value of 30.
