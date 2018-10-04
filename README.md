@@ -37,27 +37,23 @@ Using No Slam Cache requires different than usual approach to creating the resou
 
 Usual approach with typical cache system:
 
-`
-$item = $cache->getItem($key);
+`$item = $cache->getItem($key);`
 
-if (!$item) {
+`if (!$item) {`
 
-  $item = $db->executeSQL(); // <-- Creating item, it may take long time, and it will executed concurrently by many threads
+`  $item = $db->executeSQL(); // <-- Creating item, it may take long time, and it will executed concurrently by many threads`
   
-  $cache->put($item);
+`  $cache->put($item);`
   
-}
-
-`
+`}`
 
 Now php-no-slam-cache way:
 
- `
- $recipeForCreateItem = function() use($db, $or, $any, $variable, $you, $need) {
-   return $db->executeSQL(); // <-- Creating item, it will be executed by maximum one thread at time, other will yield and wait
- };
- $cacheMethod->get($group, $key, $lifetimeInSeconds, $recipeForCreateItem);
- `
+`$recipeForCreateItem = function() use($db, $or, $any, $variable, $you, $need) {`
+`   return $db->executeSQL(); // <-- Creating item, it will be executed by maximum one thread at time, other will yield and wait`
+`};`
+`$cacheMethod->get($group, $key, $lifetimeInSeconds, $recipeForCreateItem);`
+
 No checking if resource exist in the cache in Your code. 
 
 Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant that usual approach.
@@ -84,22 +80,22 @@ While resource exists in the Cache and it's not expired, it can be read concurre
 
 Real example with callback method and cache method file:
 
-`$group = 'products';
-$key = 150;
-$lifetimeInSeconds = 30;
-$name = 'anonymous';
+`$group = 'products';`
+`$key = 150;`
+`$lifetimeInSeconds = 30;`
+`$name = 'anonymous';`
 
-$createCallback = function() use($name, $group, $key) { return 'Hi '.$name.', I was created at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key; }
+`$createCallback = function() use($name, $group, $key) { return 'Hi '.$name.', I was created at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key; }`
 
-$dir = __DIR__.'/inopx_cache';
+`$dir = __DIR__.'/inopx_cache';`
 
-if (!file_exists($dir)) {
-mkdir($dir, 0775);
-}
+`if (!file_exists($dir)) {`
+`mkdir($dir, 0775);`
+`}`
 
-$cache = new \inopx\cache\CacheMethodFile($dir);
+`$cache = new \inopx\cache\CacheMethodFile($dir);`
 
-echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
+`echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
 # Requirements
 
