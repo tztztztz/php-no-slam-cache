@@ -41,7 +41,11 @@ Usual approach with typical cache system:
 
 `if (!$item) {`
 
-`  $item = $db->executeSQL(); // <-- Creating item, it may take long time, and it will executed concurrently by many threads`
+`//////////////////////////`
+`// Creating item, it may take long time, `
+`// and it will be executed concurrently by many threads`
+
+`  $item = $db->executeSQL();`
   
 `  $cache->put($item);`
   
