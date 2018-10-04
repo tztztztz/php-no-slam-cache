@@ -33,35 +33,40 @@ To install PECL Sync package visit: https://pecl.php.net/package/sync, or use pa
 
 It is many readers, one writer at once synchronization model.
 
-Using No Slam Cache requires different than usual approach to creating the resource, NOT in that way:
+Using No Slam Cache requires different than usual approach to creating the resource.
 
- `if (!resource exists in the cache) { `
+Usual approach with typical cache system:
 
- `1. create resource: several DB calls, searching, etc., few seconds to complete`
+`
+$item = $cache->getItem($key);
 
- `2. put new resource into the cache `
+if (!$item) {
+
+  $item = $db->executeSQL(); // <-- Creating item, it may take long time, and it will executed concurrently by many threads
   
- `3. return new resource`
+  $cache->put($item);
+  
+}
 
- `} `
+`
 
-...but within **single** function call to the Cache Manager Object. No checking if resource exist in the cache in Your code!
+Now php-no-slam-cache way:
 
-With No Slam Cache it is done by passing closure/callback function that creates resource, as argument for the Cache Method Object function which retrieves resource from cache. 
+ `
+ $recipeForCreateItem = function() use($db, $or, $any, $variable, $you, $need) {
+   return $db->executeSQL(); // <-- Creating item, it will be executed by maximum one thread at time, other will yield and wait
+ };
+ $cacheMethod->get($group, $key, $lifetimeInSeconds, $recipeForCreateItem);
+ `
+No checking if resource exist in the cache in Your code. 
+
+Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant that usual approach.
 
 If resource exists in the cache, closure is not executed and cached resource is returned using READ LOCK.
 
 If resource does not exists in the cache then callback function is executed in synchronized block using WRITE BLOCK, and only one callback function for given group and key is executed at once.
 
 Callback function is called without any arguments, and should return value designated for storage. If it returns NULL, nothing will be stored, and cache method object will return NULL as well.
-
-Example of usage:
-
-`$cache = new CacheMethod();`
-
-`$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
-
-This is just single method call, instead of checking if resource exist in the cache or not, in no slam cache it's done at Cache Method Object side, making your code more readable, verbose and compact at the same time compared to traditional cache usage described earlier in this document.
 
 **$group** argument is a cache group - think of it like name of SQL table, and **$key** is a cache key, think of it like unique ID of row in the table. 
 
@@ -79,21 +84,22 @@ While resource exists in the Cache and it's not expired, it can be read concurre
 
 Real example with callback method and cache method file:
 
-`$group = 'products';`
-`$key = 150;`
-`$lifetimeInSeconds = 30;`
+`$group = 'products';
+$key = 150;
+$lifetimeInSeconds = 30;
+$name = 'anonymous';
 
-`$createCallback = function() use($group, $key) { return 'I was created at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key; }`
+$createCallback = function() use($name, $group, $key) { return 'Hi '.$name.', I was created at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key; }
 
-`$dir = __DIR__.'/inopx_cache';`
+$dir = __DIR__.'/inopx_cache';
 
-`if (!file_exists($dir)) {`
-`mkdir($dir, 0775);`
-`}`
+if (!file_exists($dir)) {
+mkdir($dir, 0775);
+}
 
-`$cache = new \inopx\cache\CacheMethodFile($dir);`
+$cache = new \inopx\cache\CacheMethodFile($dir);
 
-`echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
+echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
 # Requirements
 
