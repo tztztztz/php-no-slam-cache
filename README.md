@@ -42,7 +42,9 @@ Usual approach with typical cache system:
 `if (!$item) {`
 
 `//////////////////////////`
+
 `// Creating item, it may take long time, `
+
 `// and it will be executed concurrently by many threads`
 
 `  $item = $db->executeSQL();`
@@ -54,9 +56,15 @@ Usual approach with typical cache system:
 Now php-no-slam-cache way:
 
 `$recipeForCreateItem = function() use($db, $or, $any, $variable, $you, $need) {`
-`   return $db->executeSQL(); // <-- Creating item, it will be executed by maximum one thread at time, other will yield and wait`
+
+`   // Creating item, it will be executed by one thread at a time, other threads will yield and wait`
+
+`   return $db->executeSQL();`
+
 `};`
+
 `$cacheMethod->get($group, $key, $lifetimeInSeconds, $recipeForCreateItem);`
+
 
 No checking if resource exist in the cache in Your code. 
 
