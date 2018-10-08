@@ -68,7 +68,7 @@ Now php-no-slam-cache way:
 
 No checking if resource exist in the cache in Your code. 
 
-Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant that usual approach.
+Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant than usual approach, as it nicely encapsulates whole process of creating item.
 
 If resource exists in the cache, closure is not executed and cached resource is returned using READ LOCK.
 
