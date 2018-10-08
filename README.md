@@ -45,7 +45,7 @@ Usual approach with typical cache system:
 
 `// Creating item, it may take long time, `
 
-`// and it will be executed concurrently by many threads`
+`// and during that it may be executed concurrently by many threads which leads to cache slamming`
 
 `  $item = $db->executeSQL();`
   
