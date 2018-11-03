@@ -5,7 +5,7 @@ Example of cache slamming and thread racing:
 
 Let's say we need to cache very resource consuming work, and it overally takes few seconds to complete, which is long time on busy internet sytems.
 
-In a situation where there are few or more HTTP requests per second requiring such resource from cache, here is what happens when resource is not cached, or it's expired:
+In a situation where there are few or more HTTP requests per second requiring such resource from cache here is what happens when resource is not cached, or it's expired:
 
 1. First process/thread fails to read resource from the cache, then begins to create resource, it will take few seconds and a lot of server power: processor/memory/io.
 
