@@ -11,9 +11,9 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache. They fail, and begin to repeat the same work what process/thread nr 1 is doing, because there is no such thing like process synchronization builded into most of the cached systems available for PHP. 
 
-1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, but many indicates that when page time load is longer then 200 ms, it annoys the Visitor. Loading time longer than a dozen of seconds is simply unacceptable for Visitor on Your Website.
+1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, but many indicates that when page load time is longer then 200 ms, it annoys the Visitor. Loading time longer than a dozen of seconds is simply unacceptable.
 
-1. Hanging continues to the moment when last of the job is done. When that time of hanging is higher than cached item expiration time, then You are in serious troubles.
+1. Hanging continues to the moment when last of the job is done. When the time of hanging is longer than cached item expiration time, then You are in serious troubles.
 
 > There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
 
@@ -88,7 +88,9 @@ Pair **$group** and **$key** must be unique, but **$key** value can be repeated 
 
 Whole process of reading/writing to the Cache is synchronized, that is: 
 
-**only one process will write to the cache while others will wait and then get recently created resource, instead of slamming the cache**. 
+**only one process will write to the cache (per item) while others will wait and then get recently created resource, instead of slamming the cache**. 
+
+It means there can be only one writer at once per particular group and key. Still there cen be other writer at the same time, just for other combination of group and key.
 
 While resource exists in the Cache and it's not expired, it can be read concurrently by many PHP processes at once.
 
