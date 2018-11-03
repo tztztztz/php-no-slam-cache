@@ -1,9 +1,7 @@
-# PHP Cache Slamming problem
-Cache slamming is an issue people often doesn't know about, but it's making most of the caching systems pretty ineffective, regardless of caching storage method: files, memcached, database etc.
+# PHP Cache Slamming and performance downspikes problem
+Cache slamming and performance downspikes are issues people are often not aware of, and when they occur, it's hard to find quick and satisfying solution. It's because problem lies in lack of process synchronization, not storage method (Memcached/Redis/RDBMS/Files etc.)
 
-It's because problem lies in lack of process synchronization not the storage method.
-
-An example of thread racing and cache slamming is shown below:
+Example of cache slamming and thread racing:
 
 Let's say we need to cache very resource consuming work, and it overally takes few seconds to complete, which is long time on busy internet sytems.
 
@@ -11,17 +9,15 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 1. First process/thread fails to read resource from the cache, then begins to create resource, it will take few seconds and a lot of server power: processor/memory/io.
 
-1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing, because there is no such thing like synchronization builded into most of the cached systems available for PHP. 
+1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache. They fail, and begin to repeat the same work what process/thread nr 1 is doing, because there is no such thing like process synchronization builded into most of the cached systems available for PHP. 
 
-1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, but many indicates that when page loads longer then 200 ms it starts to annoy the Visitor. Loading time longer than a dozen of seconds is simply unacceptable for casual Visitor on Your Website.
+1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, but many indicates that when page time load is longer then 200 ms, it annoys the Visitor. Loading time longer than a dozen of seconds is simply unacceptable for Visitor on Your Website.
 
-1. It continues to the moment when last of the job is done. When that time is higher than cached item expiration time, then You are in serious trouble. 
-
-**This is called cache slamming and it's wrong!**
+1. Hanging continues to the moment when last of the job is done. When that time of hanging is higher than cached item expiration time, then You are in serious troubles.
 
 > There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
 
-You may not see the problem until you have low traffic on Your website, but when You're starting to achieve success and popularity grows, so website traffic and number of concurrent processes/threads requiring cached resource, it may lead to problems like cache slamming and performance down spikes.
+You may not see the problem until you have low traffic on Your website, but when popularity of Your website grows, traffic and number of concurrent processes/threads requiring cached resources grows too. It may lead to unexpected problems when creating a cached item take even few seconds.
 
 
 # The Solution to Slamming and basic No Slam Cache usage
@@ -31,7 +27,13 @@ No Slam Cache Package offers solution to Cache Slamming Problem, providing proce
 
 To install PECL Sync package visit: https://pecl.php.net/package/sync, or use package manager on your linux distribution and install php-pecl binary. It also working on Microsoft Windows.
 
-It is many readers, one writer at once synchronization model.
+When installing on Windows check Your version of PHP (5, 7 etc.), Thread safety (TS/NTS), sys. version (x64, x86) and select dll binary accordingly or PHP won't start.
+
+Insert DLL into your PHP extension dir, edit php.ini and add:
+
+extension=php_sync.dll
+
+PECL SYNC offers many readers, one writer at once (per cached item) synchronization model.
 
 Using No Slam Cache requires different than usual approach to creating the resource.
 
@@ -66,7 +68,7 @@ Now php-no-slam-cache way:
 `$cacheMethod->get($group, $key, $lifetimeInSeconds, $recipeForCreateItem);`
 
 
-No checking if resource exist in the cache in Your code. 
+**There is no checking in Your code if resource exist in the cache**
 
 Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant than usual approach, as it nicely encapsulates whole process of creating item.
 
