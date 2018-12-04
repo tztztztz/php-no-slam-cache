@@ -1,5 +1,5 @@
 # PHP Cache Slamming and performance downspikes problem
-Cache slamming and performance downspikes are issues people are often not aware of, and when they occur, it's hard to find quick and satisfying solution. It's because problem lies in lack of process synchronization, not storage method (Memcached/Redis/RDBMS/Files etc.)
+Cache slamming and performance downspikes are issues people are often not aware of, and when they occur, it's hard to find satisfying solution quckly. It's because problem lies in lack of process synchronization, not storage method (Memcached/Redis/RDBMS/Files etc.)
 
 Example of cache slamming and thread racing:
 
