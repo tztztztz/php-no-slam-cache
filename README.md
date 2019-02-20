@@ -174,7 +174,7 @@ That is to ensure that no more than 100 files and 10 subdirectories are in every
 
 Look at **\inopx\io\IOTool** Class and Method **getClusteredDir**
 
-On some filesystems large number of files and/or subdirectories in one directory may leed to long disk seek times, and slow down IO. "Directory clustering" is preventing this problem from happening.
+On some filesystems large number of files and/or subdirectories in one directory may led to long disk seek times, and slow down IO. "Directory clustering" is preventing this problem from happening.
 
 There is still potential problem of huge number of groups and therefore, huge number of subdirectories in the base directory.
 
