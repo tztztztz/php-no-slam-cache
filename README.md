@@ -9,11 +9,11 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 1. First process/thread fails to read resource from the cache, then begins to create resource, it will take few seconds and a lot of server power: processor/memory/io.
 
-1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache. They fail, and begin to repeat the same work what process/thread nr 1 is doing, because there is no such thing like process synchronization builded into most of the cached systems available for PHP. 
+1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache. They fail, and begin to repeat the same work what process/thread nr 1 is doing, because there is no such thing like process synchronization builded into most of the cache systems available for PHP. 
 
-1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, but many indicates that when page load time is longer then 200 ms, it annoys the Visitor. Loading time longer than a dozen of seconds is simply unacceptable.
+1. Performance downspike happens, everything is slowed down magnified by number of concurrent threads and load the Job is creating. That may cause degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, and many indicates that page load time longer than 200 ms annoys the Visitor. Loading time longer than a dozen of seconds is simply unacceptable.
 
-1. Hanging continues to the moment when last of the job is done. When the time of hanging is longer than cached item expiration time, then You are in serious troubles.
+1. Hanging continues to the moment when last of the job is done. When the time of hanging is longer than cache item expiration time, then You are in serious troubles.
 
 > There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
 
@@ -33,7 +33,9 @@ Insert DLL into your PHP extension dir, edit php.ini and add:
 
 extension=php_sync.dll
 
-PECL SYNC offers many readers, one writer at once (per cached item) synchronization model.
+PECL SYNC offers many readers, one writer at once synchronization model. 
+
+No Slam Cache is using synchronization per item, that is, every item is separately synchronized.
 
 Using No Slam Cache requires different than usual approach to creating the resource.
 
@@ -57,7 +59,7 @@ Usual approach with typical cache system:
 
 Now php-no-slam-cache way:
 
-`$recipeForCreateItem = function() use($db, $or, $any, $variable, $you, $need) {`
+`$recipeForCreateItem = function() use($db, $variable1, $variable2, ... etc) {`
 
 `   // Creating item, it will be executed by one thread at a time, other threads will yield and wait`
 
@@ -70,7 +72,7 @@ Now php-no-slam-cache way:
 
 **There is no checking in Your code if resource exist in the cache**
 
-Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant than usual approach, as it nicely encapsulates whole process of creating item.
+Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant than usual approach, as it nicely encapsulates whole process of creating the item.
 
 If resource exists in the cache, closure is not executed and cached resource is returned using READ LOCK.
 
