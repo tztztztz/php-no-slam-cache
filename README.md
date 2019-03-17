@@ -180,7 +180,7 @@ On some filesystems large number of files and/or subdirectories in one directory
 
 There is still potential problem of huge number of groups and therefore, huge number of subdirectories in the base directory.
 
-**Beware of special characters in groups and keys** when using this cache method, as group and key will be respectivery subdirectory name and file name containing cached value. Those values will be sanitised first, which may lead to coflict when there are two similar keys with difference in special characters only.
+**Beware of special characters in groups and keys** when using this cache method, as group and key will be respectively subdirectory name and file name containing cached value. Those values will be sanitised first, which may lead to coflict when there are two similar keys with difference in special characters only.
 
 
 # Dummy Cache
