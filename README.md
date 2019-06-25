@@ -1,41 +1,40 @@
-# PHP Cache Slamming and performance downspikes problem
-Cache slamming and performance downspikes are issues developers are often not aware of, and when they occur, it's hard to find satisfying solution quckly. It's because problem lies in lack of process synchronization, not storage method (Memcached/Redis/RDBMS/Files etc.)
+# PHP Cache Slamming problem
+Cache slamming is an issue people often doesn't know about, but it's making most of the caching systems pretty ineffective, regardless of caching storage method: files, memcached, database etc.
 
-Example of cache slamming and thread racing:
+It's because problem lies in lack of process synchronization not the storage method.
+
+An example of thread racing and cache slamming is shown below:
 
 Let's say we need to cache very resource consuming work, and it overally takes few seconds to complete, which is long time on busy internet sytems.
 
-In a situation where there are few or more HTTP requests per second requiring such resource from cache here is what happens when resource is not cached, or it's expired:
+In a situation where there are few or more HTTP requests per second requiring such resource from cache, here is what happens when resource is not cached, or it's expired:
 
 1. First process/thread fails to read resource from the cache, then begins to create resource, it will take few seconds and a lot of server power: processor/memory/io.
 
-1. In the meantime, when first process is creating the resource, other processes/threads are trying to read cache. They fail, and begin to repeat the same work what process/thread nr 1 is doing, because there is no such thing like process synchronization builded into most of the cache systems available for PHP. 
+1. In the meantime, when the first process is creating the resource, other processes/threads are trying to read cache, fails, and doing the same work what process/thread nr 1 is doing, because there is no such thing like synchronization builded into most of the cached systems available for PHP. 
 
-1. Performance downspike happens, everything is slowed down magnified by number of concurrent threads and load the Job is creating. That may cause degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, and many indicates that page load time longer than 200 ms annoys the Visitor. Loading time longer than a dozen of seconds is simply unacceptable.
+1. Performance downspike happens, everything is slowed down, and it's magnified by number of concurrent threads and load the Job is creating. That means degradation of user experience on Your site. There are various measurement tests and opinions on the Net regarding page load time, but many indicates that when page loads longer then 200 ms it starts to annoy the Visitor. Loading time longer than a dozen of seconds is simply unacceptable for casual Visitor on Your Website.
 
-1. Hanging continues to the moment when last of the job is done. When the time of hanging is longer than cache item expiration time, then You are in serious troubles.
+1. It continues to the moment when last of the job is done. When that time is higher than cached item expiration time, then You are in serious trouble. 
+
+**This is called cache slamming and it's wrong!**
 
 > There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
 
-You may not see the problem until you have low traffic on Your website, but when popularity of Your website grows, traffic and number of concurrent processes/threads requiring cached resources grows too. It may lead to unexpected problems when creating a cached item take even few seconds.
+You may not see the problem until you have low traffic on Your website, but when You're starting to achieve success and popularity grows, so website traffic and number of concurrent processes/threads requiring cached resource, it may lead to problems like cache slamming and performance down spikes.
+
+# Requirements
+
+You need to install PECL Sync extension in order to properly use No Slam Cache: https://pecl.php.net/package/sync
+
+No Slam Cache will work without installing Sync, but it won't be able to synchronize access to cached items, which is whole point of this library, thus installing PECL Sync is highly recommended.
 
 
 # The Solution to Slamming and basic No Slam Cache usage
 
-
 No Slam Cache Package offers solution to Cache Slamming Problem, providing process synchronization using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php. 
 
-To install PECL Sync package visit: https://pecl.php.net/package/sync, or use package manager on your linux distribution and install php-pecl binary. It also working on Microsoft Windows.
-
-When installing on Windows check Your version of PHP (5, 7 etc.), Thread safety (TS/NTS), sys. version (x64, x86) and select dll binary accordingly or PHP won't start.
-
-Insert DLL into your PHP extension dir, edit php.ini and add:
-
-extension=php_sync.dll
-
-PECL SYNC offers many readers, one writer at once synchronization model. 
-
-No Slam Cache is using synchronization per item, that is, every item is separately synchronized.
+It is many readers, one writer at once synchronization model.
 
 Using No Slam Cache requires different than usual approach to creating the resource.
 
@@ -49,7 +48,7 @@ Usual approach with typical cache system:
 
 `// Creating item, it may take long time, `
 
-`// and during that it may be executed concurrently by many threads which leads to cache slamming`
+`// and it will be executed concurrently by many threads`
 
 `  $item = $db->executeSQL();`
   
@@ -59,20 +58,19 @@ Usual approach with typical cache system:
 
 Now php-no-slam-cache way:
 
-`$recipeForCreateItem = function() use($db, $variable1, $variable2, ... etc) {`
+`$recipeForCreateItem = function() use($sql, $db) {`
 
 `   // Creating item, it will be executed by one thread at a time, other threads will yield and wait`
-
-`   return $db->executeSQL();`
+`   return $db->executeSQL( sql );`
 
 `};`
 
 `$cacheMethod->get($group, $key, $lifetimeInSeconds, $recipeForCreateItem);`
 
 
-**There is no checking in Your code if resource exist in the cache**
+No checking if resource exist in the cache in Your code. 
 
-Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant than usual approach, as it nicely encapsulates whole process of creating the item.
+Using anonymous functions (http://php.net/manual/en/functions.anonymous.php) may at first seems difficult or complicated but in fact it's so much simpler and elegant that usual approach.
 
 If resource exists in the cache, closure is not executed and cached resource is returned using READ LOCK.
 
@@ -90,9 +88,7 @@ Pair **$group** and **$key** must be unique, but **$key** value can be repeated 
 
 Whole process of reading/writing to the Cache is synchronized, that is: 
 
-**only one process will write to the cache (per item) while others will wait and then get recently created resource, instead of slamming the cache**. 
-
-It means there can be only one writer at once per particular group and key. Still there cen be other writer at the same time, just for other combination of group and key.
+**only one process will write to the cache while others will wait and then get recently created resource, instead of slamming the cache**. 
 
 While resource exists in the Cache and it's not expired, it can be read concurrently by many PHP processes at once.
 
@@ -102,8 +98,9 @@ Real example with callback method and cache method file:
 `$key = 150;`
 `$lifetimeInSeconds = 30;`
 `$name = 'anonymous';`
+`$randomNumber = rand(1, 10000);`
 
-`$createCallback = function() use($name, $group, $key) { return 'Hi '.$name.', I was created at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key; }`
+`$createCallback = function() use($name, $randomNumber) { return 'Hi '.$name.', I was created at '.date('Y-m-d H:i:s').' the random number is: '.randomNumber; }`
 
 `$dir = __DIR__.'/inopx_cache';`
 
@@ -115,9 +112,7 @@ Real example with callback method and cache method file:
 
 `echo 'Cached value = '.$cache->get($group, $key, $lifetimeInSeconds, $createCallback);`
 
-# Requirements
 
-You need to install PECL Sync extension in order to use No Slam Cache: https://pecl.php.net/package/sync
 
 # Startup / boostrap
 
@@ -176,11 +171,11 @@ That is to ensure that no more than 100 files and 10 subdirectories are in every
 
 Look at **\inopx\io\IOTool** Class and Method **getClusteredDir**
 
-On some filesystems large number of files and/or subdirectories in one directory may led to long disk seek times, and slow down IO. "Directory clustering" is preventing this problem from happening.
+On some filesystems large number of files and/or subdirectories in one directory may leed to long disk seek times, and slow down IO. "Directory clustering" is preventing this problem from happening.
 
 There is still potential problem of huge number of groups and therefore, huge number of subdirectories in the base directory.
 
-**Beware of special characters in groups and keys** when using this cache method, as group and key will be respectively subdirectory name and file name containing cached value. Those values will be sanitised first, which may lead to coflict when there are two similar keys with difference in special characters only.
+**Beware of special characters in groups and keys** when using this cache method, as group and key will be respectivery subdirectory name and file name containing cached value. Those values will be sanitised first, which may lead to coflict when there are two similar keys with difference in special characters only.
 
 
 # Dummy Cache
@@ -242,4 +237,3 @@ Help information will appear with available commands.
 You should open few Command Line Windows, put desired command in every window, and test concurrency.
 
 Test script is initially configured for that, as it sleeps for 10 seconds in the callback function to give you time to execute the same script in the rest of the opened windows and observe results.
-
