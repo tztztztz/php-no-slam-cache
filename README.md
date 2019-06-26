@@ -62,7 +62,7 @@ Now php-no-slam-cache way:
 
 `   // Creating item, it will be executed by one thread at a time, other threads will yield and wait`
 
-`   return $db->executeSQL( sql );`
+`   return $db->executeSQL( $sql );`
 
 `};`
 
