@@ -96,9 +96,13 @@ While resource exists in the Cache and it's not expired, it can be read concurre
 Real example with callback method and cache method file:
 
 `$group = 'products';`
+
 `$key = 150;`
+
 `$lifetimeInSeconds = 30;`
+
 `$name = 'anonymous';`
+
 `$randomNumber = rand(1, 10000);`
 
 `$createCallback = function() use($name, $randomNumber) { return 'Hi '.$name.', I was created at '.date('Y-m-d H:i:s').' the random number is: '.randomNumber; }`
