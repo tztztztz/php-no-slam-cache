@@ -89,7 +89,7 @@ Pair **$group** and **$key** must be unique, but **$key** value can be repeated 
 
 Whole process of reading/writing to the Cache is synchronized, that is: 
 
-**only one process will write to the cache while others will wait and then get recently created resource, instead of slamming the cache**. 
+**only one process will write to the cache for given group and key while others will wait and then get recently created resource, instead of slamming the cache**. 
 
 While resource exists in the Cache and it's not expired, it can be read concurrently by many PHP processes at once.
 
