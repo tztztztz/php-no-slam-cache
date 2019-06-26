@@ -48,7 +48,7 @@ Usual approach with typical cache system:
 
 `// Creating item, it may take long time, `
 
-`// and it will be executed concurrently by many threads`
+`// and it may be executed concurrently by many threads`
 
 `  $item = $db->executeSQL();`
   
@@ -61,6 +61,7 @@ Now php-no-slam-cache way:
 `$recipeForCreateItem = function() use($sql, $db) {`
 
 `   // Creating item, it will be executed by one thread at a time, other threads will yield and wait`
+
 `   return $db->executeSQL( sql );`
 
 `};`
