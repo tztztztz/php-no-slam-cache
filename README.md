@@ -19,7 +19,7 @@ In a situation where there are few or more HTTP requests per second requiring su
 
 **This is called cache slamming and it's wrong!**
 
-> There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.
+**There should be only one process creating the resource at the time, while others should yeld, wait and sleep until first proces will finish the job. After that the sleeping processes should be woken up and read newly created resource from cache.**
 
 You may not see the problem until you have low traffic on Your website, but when You're starting to achieve success and popularity grows, so website traffic and number of concurrent processes/threads requiring cached resource, it may lead to problems like cache slamming and performance down spikes.
 
