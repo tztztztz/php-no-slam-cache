@@ -5,7 +5,7 @@ It's because problem lies in lack of process synchronization not the storage met
 
 An example of thread racing and cache slamming is shown below:
 
-Let's say we need to cache very resource consuming work, and it overally takes few seconds to complete, which is long time on busy internet sytems.
+Let's say we need to cache very resource consuming work, and it overally takes few seconds to complete, which is long time on busy internet systems.
 
 In a situation where there are few or more HTTP requests per second requiring such resource from cache, here is what happens when resource is not cached, or it's expired:
 
