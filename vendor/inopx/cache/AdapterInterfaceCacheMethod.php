@@ -29,7 +29,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   protected $inputOutputTransformer;
   
   /**
-   * Optionakl prefix added to key and group names.
+   * Optional prefix added to key and group names.
    * 
    * @var string 
    */
@@ -39,10 +39,10 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   /**
    * Interface method for setting the resource with write lock synchronization.
    * 
-   * @param type $group
-   * @param type $key
-   * @param type $value
-   * @param type $lifetimeInSeconds
+   * @param string $group
+   * @param string $key
+   * @param string $value
+   * @param int $lifetimeInSeconds
    */
   public function set($group, $key, $value, $lifetimeInSeconds) {
     $key = $this->getCacheKeyPrefix().$key;
@@ -51,8 +51,8 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   /**
    * Interface method for destroying the resource using write lock synchronization.
    * 
-   * @param string $group - grupa wartości
-   * @param string $key   - klucz wartości
+   * @param string $group - group
+   * @param string $key   - key
    */
   public function destroy($group, $key) {
     $key = $this->getCacheKeyPrefix().$key;
@@ -90,10 +90,10 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   /**
    * Read task performed in synchronized block
    * 
-   * @param type $lockKey
-   * @param type $lockTimeoutInSeconds
-   * @param type $callback
-   * @return type
+   * @param string $lockKey
+   * @param int $lockTimeoutInSeconds
+   * @param callable $callback
+   * @return mixed
    */
   protected function synchronizedReadCallback($lockKey, $lockTimeoutInSeconds, $callback) {
    
@@ -104,10 +104,10 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   /**
    * Write task performed in synchronized block
    * 
-   * @param type $lockKey
-   * @param type $lockTimeoutInSeconds
-   * @param type $callback
-   * @return type
+   * @param string $lockKey
+   * @param int $lockTimeoutInSeconds
+   * @param callable $callback
+   * @return mixed
    */
   protected function synchronizedWriteCallback($lockKey, $lockTimeoutInSeconds, $callback) {
     
@@ -119,10 +119,10 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * Read/write task performed in synchronized block
    * 
    * @param int $lockType         : 1 - read lock, 2 - write lock
-   * @param type $lockKey
-   * @param type $lockTimeoutInSeconds
-   * @param type $callback
-   * @return type
+   * @param string $lockKey
+   * @param int $lockTimeoutInSeconds
+   * @param callable $callback
+   * @return mixed
    */
   protected function synchronizedCallback($lockType, $lockKey, $lockTimeoutInSeconds, $callback) {
     
@@ -246,7 +246,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   
   /**
    * Gets use synchronization setting.
-   * @return type
+   * @return boolean
    */
   public function getUseCacheSynchronization() {
     
@@ -282,7 +282,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * @deprecated since version 1.0.4
    * To use synchronisation or not to use, that is a question.
    * 
-   * @param type $decision
+   * @param boolean $decision
    */
   public function setUseCacheSynchronisation($decision) {
     
