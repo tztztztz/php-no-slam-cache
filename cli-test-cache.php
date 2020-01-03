@@ -11,6 +11,7 @@ $pass = null;
 $sleep = 5;
 $lockTimeout = 30;
 $prefix = null;
+$synchro = null;
 
 $tests = [
   'memcached' => 'Memcached method test', 
@@ -34,7 +35,7 @@ if ($argc > 1) {
       break;
     }
     
-    if ($argv[$idx] == '--test' || $argv[$idx] == '--dsn' || $argv[$idx] == '--user' || $argv[$idx] == '--pass' || $argv[$idx] == '--sleep' || $argv[$idx] == '--prefix') {
+    if ($argv[$idx] == '--test' || $argv[$idx] == '--dsn' || $argv[$idx] == '--user' || $argv[$idx] == '--pass' || $argv[$idx] == '--sleep' || $argv[$idx] == '--prefix' || $argv[$idx] == '--synchro') {
       
       $tmp = $idx;
       $idx++;
@@ -64,6 +65,9 @@ if ($argc > 1) {
         }
         else if ($argv[$tmp] == '--prefix') {
           $prefix = $argv[ $idx ];
+        }
+        else if ($argv[$tmp] == '--synchro') {
+          $synchro = $argv[ $idx ];
         }
         
       }
@@ -107,6 +111,14 @@ if ($showHelp) {
     echo $code.' - '.$descpn.\PHP_EOL;
   }
   
+  echo \PHP_EOL.'--synchro [SYNCHRO]'.\PHP_EOL.\PHP_EOL;
+  echo 'Where [synchro] is one of following synchros:'.\PHP_EOL.\PHP_EOL;
+  echo 'pgsql - for PostgreSQL synchronization method'.\PHP_EOL;
+  echo 'sync - for PECL sync synchronization method '.\PHP_EOL;
+  echo 'Synchro sync is a default synchro, and requires PECL Sync library'.\PHP_EOL;
+  echo 'To use pgsql synchro, you need to edit class \inopx\cache\SynchroPostgresql and set $dbUser and $dbPass variables, create postgresql database, and create database table using method createSyncTable()'.\PHP_EOL;
+  
+  
   echo \PHP_EOL;
   echo 'Examples:'.\PHP_EOL;
   echo 'php cli-test-cache.php --test memcached'.\PHP_EOL;
@@ -124,8 +136,6 @@ echo "PASS = ".$user.\PHP_EOL;
 echo "DSN = ".$user.\PHP_EOL;
 echo "SLEEP IN CREATE PROCESS = ".$sleep." sec.".\PHP_EOL.\PHP_EOL;
 echo "LOCK TIMEOUT = ".$lockTimeout." sec.".\PHP_EOL.\PHP_EOL;
-
-
 
 
 ///////////////////
@@ -162,10 +172,25 @@ $createCallback = function() use($firstNames, $lastNames, $sleep) {
 
 
 ///////////////////
+// Special Synchro?
+if ($synchro == 'pgsql') {
+  
+  $synchro = function ($lockKey, $lockTimeoutMilliseconds) {
+        
+    return new \inopx\cache\SynchroPostgresql($lockKey, $lockTimeoutMilliseconds);
+
+  };
+  
+}
+
+
+
+
+///////////////////
 // Test memcached cache
 if ($command == 'memcached') {
   
-  $cache = new \inopx\cache\CacheMethodMemcached('127.0.0.1', 11211, $lockTimeout);
+  $cache = new \inopx\cache\CacheMethodMemcached('127.0.0.1', 11211, $lockTimeout, null, $synchro);
   
   // Setting optional prefix
   $cache->setCacheKeyPrefix($prefix);
@@ -185,7 +210,7 @@ if ($command == 'pdo-mysql-create-table' || $command == 'pdo-mysql' || $command 
 
   $PDO = new \PDO($dsn, $user, $pass, $options);
   
-  $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL, $lockTimeout);
+  $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL, $lockTimeout, null, $synchro);
   
   // Setting optional prefix
   $cache->setCacheKeyPrefix($prefix);
@@ -234,7 +259,7 @@ if ($command == 'pdo-pgsql-create-table' || $command == 'pdo-pgsql' || $command 
   
   $PDO = new \PDO($dsn, $user, $pass);
   
-  $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL, $lockTimeout);
+  $cache = new \inopx\cache\CacheMethodPDO($PDO, \inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL, $lockTimeout, null, $synchro);
   
   // Setting optional prefix
   $cache->setCacheKeyPrefix($prefix);
@@ -292,7 +317,7 @@ if ($command == 'file') {
     mkdir($dir, 0775);
   }
   
-  $cache = new \inopx\cache\CacheMethodFile($dir, $lockTimeout);
+  $cache = new \inopx\cache\CacheMethodFile($dir, $lockTimeout, null, $synchro);
   
   // Setting optional prefix
   $cache->setCacheKeyPrefix($prefix);
