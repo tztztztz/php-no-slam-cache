@@ -16,7 +16,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   protected $useCacheSynchronization = true;
   
   /**
-   * Synchronisation timeout in seconds. Default 30 sec.
+   * Synchronization timeout in seconds. Default 30 sec.
    * @var int 
    */
   protected $syncTimeoutSeconds = 30;
@@ -34,25 +34,38 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * @var string 
    */
   private $prefix;
+  
+  /**
+   * Callback that will create new synchro object (that implements interface \inopx\cache\InterfaceSynchro) when necessary, its two argument callable function: 
+   * 1st argument - lock key name
+   * 2nd argument - locktimeout in milliseconds
+   * 
+   * @var callable
+   */
+  protected $synchroCallback;
 
 
   /**
-   * Interface method for setting the resource with write lock synchronization.
+   * Interface method for setting the resource with write lock synchronization. 
    * 
-   * @param string $group
-   * @param string $key
-   * @param string $value
-   * @param int $lifetimeInSeconds
+   * This adapter method sets the key using prefix, thats why child method should start with parent::set($group, $key, $value, $lifetimeInSeconds)
+   * 
+   * @param string $group           - cache group, like table name in SQL database
+   * @param string $key             - resource id, like primary key value in database table
+   * @param mixed $value            - value to set in cache
+   * @param int $lifetimeInSeconds  - lifetime in seconds
    */
   public function set($group, $key, $value, $lifetimeInSeconds) {
     $key = $this->getCacheKeyPrefix().$key;
   }
   
   /**
-   * Interface method for destroying the resource using write lock synchronization.
+   * Destroys the resource using write lock synchronization.
    * 
-   * @param string $group - group
-   * @param string $key   - key
+   * This adapter method sets the key using prefix, thats why child method should start with parent::destroy($group, $key)
+   * 
+   * @param string $group - cache group, like table name in SQL database
+   * @param string $key   - resource id, like primary key value in database table
    */
   public function destroy($group, $key) {
     $key = $this->getCacheKeyPrefix().$key;
@@ -60,23 +73,40 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   
   /**
    * Value getter without synchronization for child class - like from file, memcached, database etc.
+   * 
+   * This adapter method sets the key using prefix, thats why child method should start with parent::getValueNoSynchro($group, $key, $lifetimeInSeconds)
+   * 
+   * @param string $group - cache group, like table name in SQL database
+   * @param string $key   - resource id, like primary key value in database table
+   * @param type $lifetimeInSeconds - lifetime in seconds
    */
   protected function getValueNoSynchro($group, $key, $lifetimeInSeconds) {
     $key = $this->getCacheKeyPrefix().$key;
   }
+  
+  
   /**
    * Value creator and saver to the file, db, etc. without synchronization, for child class.
+   * 
+   * This adapter method sets the key using prefix, thats why child method should start with parent::createAndSaveValue($group, $key, $lifetimeInSeconds, $createCallback)
+   * 
+   * @param string $group - cache group, like table name in SQL database
+   * @param string $key   - resource id, like primary key value in database table
+   * @param type $lifetimeInSeconds - lifetime in seconds
+   * @param callable $createCallback - create callbac that will return value for save
    */
   protected function createAndSaveValue($group, $key, $lifetimeInSeconds, callable $createCallback) {
     $key = $this->getCacheKeyPrefix().$key;
   }
   
   /**
-   * Typical constructor
+   * Typical constructor.
+   * 
    * @param int $syncTimeoutSeconds - timeout of waiting for synchronisation, in seconds
    * @param \inopx\cache\InterfaceInputOutput $inputOutputTransformer - input / output transformer
+   * @param callable $synchroCallback - synchro callback to create synchro object, null = default synchro (PECL Sync)
    */
-  public function __construct($syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null) {
+  public function __construct($syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null, $synchroCallback = null) {
     
     if (!$inputOutputTransformer) {
       $inputOutputTransformer = new \inopx\cache\AdapterInterfaceInputOutput();
@@ -84,16 +114,30 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
     
     $this->syncTimeoutSeconds = $syncTimeoutSeconds;
     $this->inputOutputTransformer = $inputOutputTransformer;
+    
+    // Default synchro if no synchro callback provided
+    if (!$synchroCallback) {
+      
+      $synchroCallback = function ($lockKey, $lockTimeoutMilliseconds) {
+        
+        return new \inopx\cache\SynchroPECLSync($lockKey, $lockTimeoutMilliseconds);
+        
+      };
+      
+    }
+    
+    $this->synchroCallback = $synchroCallback;
+    
   
   }
   
   /**
    * Read task performed in synchronized block
    * 
-   * @param string $lockKey
-   * @param int $lockTimeoutInSeconds
-   * @param callable $callback
-   * @return mixed
+   * @param string $lockKey - lock key
+   * @param int $lockTimeoutInSeconds - lock timeout in seconds
+   * @param callable $callback  - read callback
+   * @return mixed  - value
    */
   protected function synchronizedReadCallback($lockKey, $lockTimeoutInSeconds, $callback) {
    
@@ -104,10 +148,10 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   /**
    * Write task performed in synchronized block
    * 
-   * @param string $lockKey
-   * @param int $lockTimeoutInSeconds
-   * @param callable $callback
-   * @return mixed
+   * @param string $lockKey - lock key
+   * @param int $lockTimeoutInSeconds - lock timeout in seconds
+   * @param callable $callback  - write callback
+   * @return mixed  - value
    */
   protected function synchronizedWriteCallback($lockKey, $lockTimeoutInSeconds, $callback) {
     
@@ -118,16 +162,18 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   /**
    * Read/write task performed in synchronized block
    * 
-   * @param int $lockType         : 1 - read lock, 2 - write lock
-   * @param string $lockKey
-   * @param int $lockTimeoutInSeconds
-   * @param callable $callback
-   * @return mixed
+   * @param int $lockType - Lock type: 1 - read lock, 2 - write lock
+   * @param string $lockKey - lock key
+   * @param int $lockTimeoutInSeconds - lock timeout in seconds
+   * @param callable $callback  - read/write callback
+   * @return type
    */
   protected function synchronizedCallback($lockType, $lockKey, $lockTimeoutInSeconds, $callback) {
     
     if ($this->useCacheSynchronization) {
-      $synchro = new \inopx\cache\AdapterInterfaceSynchro($lockKey, $lockTimeoutInSeconds*1000);
+      
+      
+      $synchro = $this->getNewSynchro($lockKey, $lockTimeoutInSeconds*1000);
 
       if ($lockType == 1) {
         $result = $synchro->readLock();
@@ -202,7 +248,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
     
     /////////////////
     // Trying to read again - with write lock
-    $synchro = new \inopx\cache\AdapterInterfaceSynchro($group.$key, $this->syncTimeoutSecond);
+    $synchro = $this->getNewSynchro($group.$key, $this->syncTimeoutSeconds*1000);
       
     if (!$synchro->writeLock()) {
       
@@ -246,7 +292,8 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
   
   /**
    * Gets use synchronization setting.
-   * @return boolean
+   * 
+   * @return type
    */
   public function getUseCacheSynchronization() {
     
@@ -282,7 +329,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    * @deprecated since version 1.0.4
    * To use synchronisation or not to use, that is a question.
    * 
-   * @param boolean $decision
+   * @param type $decision
    */
   public function setUseCacheSynchronisation($decision) {
     
@@ -330,6 +377,31 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
    */
   public function getCacheKeyPrefix() {
     return $this->prefix;
+  }
+  
+  /**
+   * Sets callback that will create new synchro object (that implements interface \inopx\cache\InterfaceSynchro) when necessary, its two argument callable function: 
+   * 1st argument - lock key name
+   * 2nd argument - locktimeout in milliseconds
+   * 
+   * @param callable $callback
+   */
+  public function setNewSynchroCallback($callback) {
+    $this->synchroCallback = $callback;
+  }
+
+  
+  /**
+   * Gets new synchro object using synchro callback set by setNewSynchroCallback method. By default it's new instance of \inopx\cache\SynchroPECLSync class
+   * 
+   * @param type $lockKey
+   * @param type $lockTimeoutMiliseconds
+   * @return \inopx\cache\InterfaceSynchro
+   */
+  public function getNewSynchro($lockKey, $lockTimeoutMiliseconds) {
+    
+    return \call_user_func($this->synchroCallback, $lockKey, $lockTimeoutMiliseconds);
+    
   }
   
   

@@ -59,8 +59,6 @@ interface InterfaceCacheMethod {
    */
   public function getInputOutput();
   
-  
-  
   /**
    * Alias to setUseCacheSynchronization(), method will become depreciate in the future, sets whether to use locking or not.
    * 
@@ -75,7 +73,9 @@ interface InterfaceCacheMethod {
   public function getUseCacheSynchronisation();
   
   /**
-   * Sets the key name prefix. 
+   * Sets the key name prefix.
+   * 
+   * @param string $prefix  - prefix to use for keys
    */
   public function setCacheKeyPrefix($prefix);
   
@@ -83,6 +83,23 @@ interface InterfaceCacheMethod {
    * Gets the key name prefix. 
    */
   public function getCacheKeyPrefix();
+  
+  /**
+   * Sets callback that will create new synchro object (that implements interface \inopx\cache\InterfaceSynchro) when necessary, its two argument callable function: 
+   * 1st argument - lock key name
+   * 2nd argument - locktimeout in milliseconds
+   * 
+   * @param callable $callback
+   */
+  public function setNewSynchroCallback( $callback );
+  
+  /**
+   * Gets new synchro object using synchro callback set by setNewSynchroCallback method
+   * 
+   * @param string $lockKey               - synchronization key
+   * @param int $lockTimeoutMiliseconds   - lock timeout in milliseconds (1/1000 of a second)
+   */
+  public function getNewSynchro($lockKey, $lockTimeoutMiliseconds);
   
   
 }

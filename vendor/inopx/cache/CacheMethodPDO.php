@@ -68,15 +68,16 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
   const SQL_DIALECT_POSTGRESQL = 2;
   
   /**
+   * Constructor
    * 
    * @param \PDO $PDOConnection       - PDO Connection to the DB
    * @param type $sqlDialect          - SQL Dialect to use, leave NULL for default MySQL
    * @param type $syncTimeoutSeconds  - sync timeout default 30 sec
    * @param \inopx\cache\InterfaceInputOutput $inputOutputTransformer - input / output transformer, leave null for default adapter
    */
-  public function __construct(\PDO $PDOConnection, $sqlDialect = null, $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null) {
+  public function __construct(\PDO $PDOConnection, $sqlDialect = null, $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null, $synchroCallback = null) {
     
-    parent::__construct($syncTimeoutSeconds, $inputOutputTransformer);
+    parent::__construct($syncTimeoutSeconds, $inputOutputTransformer, $synchroCallback);
     
     $this->PDOConnection = $PDOConnection;
     
@@ -350,7 +351,11 @@ class CacheMethodPDO extends \inopx\cache\AdapterInterfaceCacheMethod {
   
   
   /**
-   * Tworzy tabelę SQL do przechowywania, o nazwie zawartej w $this->tableName
+   * Creates database table for cache storage.
+   * 
+   * @param type $extraOptions
+   * @return boolean
+   * @throws \Exception
    */
   public function createSQLTable($extraOptions = null) {
     

@@ -53,6 +53,15 @@ class CacheMethodDummy implements \inopx\cache\InterfaceCacheMethod {
   public function setCacheKeyPrefix($prefix) {
     return FALSE;
   }
+  
+  public function getNewSynchro($lockKey, $lockTimeoutMiliseconds) {
+    
+  }
+
+  public function setNewSynchroCallback($callback) {
+    
+  }
+
 
   
 }

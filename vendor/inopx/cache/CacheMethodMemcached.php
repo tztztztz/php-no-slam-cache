@@ -21,9 +21,9 @@ class CacheMethodMemcached extends \inopx\cache\AdapterInterfaceCacheMethod {
    * @param int $syncTimeoutSeconds   - lock timeout, default 30
    * @param \inopx\cache\InterfaceInputOutput $inputOutputTransformer - input / output transformer, leave null for default adapter
    */
-  public function __construct($memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null) {
+  public function __construct($memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30, \inopx\cache\InterfaceInputOutput $inputOutputTransformer = null, $synchroCallback = null) {
     
-    parent::__construct($syncTimeoutSeconds, $inputOutputTransformer);
+    parent::__construct($syncTimeoutSeconds, $inputOutputTransformer, $synchroCallback);
     
     $this->memcachedHost = $memcachedHost;
     $this->memcachedPort = $memcachedPort;
