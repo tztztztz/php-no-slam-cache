@@ -150,7 +150,7 @@ Class **\inopx\cache\CacheMethodMemcached** is a Memcached Storage Method Class 
 
 `__construct( $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30, $inputOutputTransformer = null, $synchroCallback = null )`
 
-Where constructor arguments are pretty much self-explanatory. Look at API documentation for $synchroCallback parameter.
+Where constructor arguments are pretty much self-explanatory. Look at API documentation for $synchroCallback parameter and "Synchronization using PostgreSQL" section in this readme.
 
 # Cache Method PDO
 
@@ -164,7 +164,7 @@ Before you may use this cache method, you must create database table by executin
 
 Name of the Table and names of the Columns can be configured by altering class variables like: **$SQLTableName**, **$SQLColumnGroupName**, **$SQLColumnKeyName** and so on - look at API Documentation for more.
 
-Look at API documentation for $synchroCallback parameter.
+Look at API documentation for $synchroCallback parameter and "Synchronization using PostgreSQL" section in this readme.
 
 # Cache Method File
 
@@ -172,7 +172,7 @@ Class **\inopx\cache\CacheMethodFile** is a File Storage Method Class with const
 
 `__construct( string $baseDir = 'inopx_cache', integer $syncTimeoutSeconds = 30, $inputOutputTransformer = null, $synchroCallback = null )`
 
-Look at API documentation for $synchroCallback parameter.
+Look at API documentation for $synchroCallback parameter and "Synchronization using PostgreSQL" section in this readme.
 
 Where **$baseDir** is a base directory for cache files, without trailing separator. The base directory must exist and be writable for PHP.
 
@@ -234,6 +234,27 @@ Callback like this is WRONG:
 `}`
 
 ...because **$value2** is created using cache within the callback, it's nested lock, and if other process is locking in reversed order, using the same group and key, there is possibility of deadlock.
+
+# Synchronization using PostgreSQL
+
+If You want to use PostgreSQL for synchronization, you need to do following things:
+
+- refill $dbUser and $dbPass variables in SynchroPostgresql class file
+- create postgresql database designated for locking
+- create postgresql table designated for locking, using createSyncTable() method in SynchroPostgresql class 
+- create callback that will return postgresql synchro and use it when constructing Cache Methods
+
+Example:
+
+```
+$synchro = function ($lockKey, $lockTimeoutMilliseconds) {
+        
+  return new \inopx\cache\SynchroPostgresql($lockKey, $lockTimeoutMilliseconds);
+
+};
+
+$cache = \inopx\cache\CacheMethodFile('inopx-cache', 30, null, $synchro);
+```
 
 # Test script
 
