@@ -34,7 +34,9 @@ No Slam Cache will work without installing Sync, but it won't be able to synchro
 
 # The Solution to Slamming and basic No Slam Cache usage
 
-No Slam Cache Package offers solution to Cache Slamming Problem, providing process synchronization using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php. 
+No Slam Cache Package offers solution to Cache Slamming Problem, providing process synchronization using PECL Sync package and SyncReaderWriter Class: http://php.net/manual/en/class.syncreaderwriter.php, or by PostgreSQL row-level locking. 
+
+By default it uses PECL Sync.
 
 It is many readers, one writer at once synchronization model.
 
@@ -146,15 +148,15 @@ Because of that, it is important to override this value in case when the work cr
 
 Class **\inopx\cache\CacheMethodMemcached** is a Memcached Storage Method Class with constructor:
 
-`__construct( $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30 )`
+`__construct( $memcachedHost = '127.0.0.1', $memcachedPort = 11211, $syncTimeoutSeconds = 30, $inputOutputTransformer = null, $synchroCallback = null )`
 
-Where constructor arguments are pretty much self-explanatory.
+Where constructor arguments are pretty much self-explanatory. Look at API documentation for $synchroCallback parameter.
 
 # Cache Method PDO
 
 Class **\inopx\cache\CacheMethodPDO** is a Database storage Method Class with constructor:
 
-`__construct( PDO $PDOConnection, integer $sqlDialect = null, integer $syncTimeoutSeconds = 30 )`
+`__construct( PDO $PDOConnection, integer $sqlDialect = null, integer $syncTimeoutSeconds = 30, $inputOutputTransformer = null, $synchroCallback = null )`
 
 Where **$PDOConnection** is a established connection to database (PDO Class), and **$sqlDialect** is one of the two dialects supported by this class: **\inopx\cache\CacheMethodPDO::SQL_DIALECT_MYSQL** or **\inopx\cache\CacheMethodPDO::SQL_DIALECT_POSTGRESQL**.
 
@@ -162,11 +164,15 @@ Before you may use this cache method, you must create database table by executin
 
 Name of the Table and names of the Columns can be configured by altering class variables like: **$SQLTableName**, **$SQLColumnGroupName**, **$SQLColumnKeyName** and so on - look at API Documentation for more.
 
+Look at API documentation for $synchroCallback parameter.
+
 # Cache Method File
 
 Class **\inopx\cache\CacheMethodFile** is a File Storage Method Class with constructor:
 
-`__construct( string $baseDir = 'inopx_cache', integer $syncTimeoutSeconds = 30 )`
+`__construct( string $baseDir = 'inopx_cache', integer $syncTimeoutSeconds = 30, $inputOutputTransformer = null, $synchroCallback = null )`
+
+Look at API documentation for $synchroCallback parameter.
 
 Where **$baseDir** is a base directory for cache files, without trailing separator. The base directory must exist and be writable for PHP.
 
