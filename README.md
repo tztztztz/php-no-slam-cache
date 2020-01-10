@@ -255,6 +255,8 @@ $synchro = function ($lockKey, $lockTimeoutMilliseconds) {
 $cache = \inopx\cache\CacheMethodFile('inopx-cache', 30, null, $synchro);
 ```
 
+Please note, synchronization using PostgreSQL is much slower than using PECL Sync, as it is based on SQL Transactions.
+
 # Test script
 
 You can find **cli-test-cache.php** script in the main directory of No Slam Cache package.
