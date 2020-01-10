@@ -27,10 +27,9 @@ You may not see the problem until you have low traffic on Your website, but when
 
 # Requirements
 
-You need to install PECL Sync extension in order to properly use No Slam Cache: https://pecl.php.net/package/sync
+You need to install PECL Sync extension in order to use default No Slam Cache synchronization method: https://pecl.php.net/package/sync
 
-No Slam Cache will work without installing Sync, but it won't be able to synchronize access to cached items, which is whole point of this library, thus installing PECL Sync is highly recommended.
-
+Instead you can synchronize using PostgreSQL row level locking mechanism, read "Synchronization using PostgreSQL" below in this Readme.
 
 # The Solution to Slamming and basic No Slam Cache usage
 
