@@ -55,7 +55,7 @@ class SynchroPECLSync extends \inopx\cache\AdapterInterfaceSynchro {
     
     if (!class_exists('syncReaderWriter')) {
       $this->noSynchro = true;
-      error_log('WARNING - Sync library is not present', E_WARNING);
+      error_log('WARNING - Sync library is not present');
     }
     else {
       $this->syncReaderWriter = new \SyncReaderWriter($key);
