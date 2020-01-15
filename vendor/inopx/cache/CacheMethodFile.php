@@ -89,7 +89,7 @@ class CacheMethodFile extends \inopx\cache\AdapterInterfaceCacheMethod {
     }
     catch (\Exception $e) {
       
-      error_log( $e->getMessage() );
+      \trigger_error( $e->getMessage() );
       return null;
       
     }

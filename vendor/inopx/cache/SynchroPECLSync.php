@@ -55,7 +55,7 @@ class SynchroPECLSync extends \inopx\cache\AdapterInterfaceSynchro {
     
     if (!class_exists('syncReaderWriter')) {
       $this->noSynchro = true;
-      error_log('WARNING - Sync library is not present');
+      \trigger_error('WARNING - Sync library is not present');
     }
     else {
       $this->syncReaderWriter = new \SyncReaderWriter($key);
@@ -71,7 +71,7 @@ class SynchroPECLSync extends \inopx\cache\AdapterInterfaceSynchro {
     }
     
     if ($this->debug) {
-      error_log('readLock() timeout '.$this->timeout.' for '.$this->key);
+      \trigger_error('readLock() timeout '.$this->timeout.' for '.$this->key);
     }
     
     return $this->syncReaderWriter->readlock( $this->timeout );
@@ -84,7 +84,7 @@ class SynchroPECLSync extends \inopx\cache\AdapterInterfaceSynchro {
     }
     
     if ($this->debug) {
-      error_log('readUnlock() for '.$this->key);
+      \trigger_error('readUnlock() for '.$this->key);
     }
     
     return $this->syncReaderWriter->readunlock();
@@ -97,7 +97,7 @@ class SynchroPECLSync extends \inopx\cache\AdapterInterfaceSynchro {
     }
     
     if ($this->debug) {
-      error_log('writeLock() timeout '.$this->timeout.' for '.$this->key);
+      \trigger_error('writeLock() timeout '.$this->timeout.' for '.$this->key);
     }
     
     return $this->syncReaderWriter->writelock( $this->timeout );
@@ -110,7 +110,7 @@ class SynchroPECLSync extends \inopx\cache\AdapterInterfaceSynchro {
     }
     
     if ($this->debug) {
-      error_log('writeUnlock() for '.$this->key);
+      \trigger_error('writeUnlock() for '.$this->key);
     }
     
     return $this->syncReaderWriter->writeunlock();

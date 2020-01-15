@@ -183,7 +183,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
       }
 
       if (!$result) {
-        \error_log('Cache lock failed at '.date('Y-m-d H:i:s').' for lock key: '.$lockKey);
+        \trigger_error('Cache lock failed at '.date('Y-m-d H:i:s').' for lock key: '.$lockKey);
         return null;
       }
     }
@@ -199,7 +199,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
       }
 
       if (!$result) {
-        \error_log('Cache unlock failed at '.date('Y-m-d H:i:s').' for lock key: '.$lockKey);
+        \trigger_error('Cache unlock failed at '.date('Y-m-d H:i:s').' for lock key: '.$lockKey);
       }
     }
     
@@ -252,7 +252,7 @@ abstract class AdapterInterfaceCacheMethod implements \inopx\cache\InterfaceCach
       
     if (!$synchro->writeLock()) {
       
-      \error_log('Cache lock failed at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key);
+      \trigger_error('Cache lock failed at '.date('Y-m-d H:i:s').' for group '.$group.' and key '.$key);
       return $create();
     }
     
