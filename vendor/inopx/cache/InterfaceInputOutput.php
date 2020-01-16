@@ -11,12 +11,12 @@ interface InterfaceInputOutput {
   /**
    * Function to transform data before putting into storage
    */
-  public function &input($dataForStorage);
+  public function input($dataForStorage);
   
   /**
    * Function to transform data after retrieving from storage
    */
-  public function &output($dataFromStorage);
+  public function output($dataFromStorage);
   
   
 }
